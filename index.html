@@ -93,7 +93,9 @@
   <div class="container">
     <div class="qid" id="qid"></div>
     <div class="meta" id="meta"></div>
-    <div class="vignette" id="vignette">Choose your <strong>updated_questions.json</strong> (or .js) and click <em>Import</em> (admin only).</div>
+    <div class="vignette" id="vignette">
+      Looking for question files in your repository…
+    </div>
     <div class="findings-title">Physical Findings</div>
     <ul class="findings" id="findings"></ul>
     <div id="options"></div>
@@ -219,6 +221,7 @@
     window.__reviewPtr = 0;
     window.__adminUnlocked = false;
     window.__commentLog = [];
+    window.__loadReport = {files:[], total:0, errors:[]};
 
     const $ = (id) => document.getElementById(id);
     function escapeHTML(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
@@ -237,6 +240,12 @@
     function startTimer(){ window.__qStart = Date.now(); updateTopbar(); }
     function stopTimer(){ const now=Date.now(); const spent = now - window.__qStart; window.__timeSpent[idx]=(window.__timeSpent[idx]||0)+spent; updateTopbar(); }
 
+    function setVignetteStatus(text){
+      const v = $('vignette');
+      if (!v) return;
+      v.textContent = text;
+    }
+
     function showModal(id, show=true){ const m=$(id); const bd=$('backdrop'); if(!m||!bd) return; bd.style.display = show?'block':'none'; m.style.display = show?'block':'none'; }
     function openAdminLogin(){ try{ $('admin-pass').value=''; $('admin-msg').textContent=''; showModal('admin-modal', true); }catch(e){ alert('Admin dialog error: '+e.message); } }
     function closeAdminLogin(){ showModal('admin-modal', false); }
@@ -250,155 +259,58 @@
     // MULTI-TRIGGER BINDING (click, key, dblclick, long-press, delegation)
     function bindLogoTriggers(){ 
       const btn = $('logoBtn'); const img = $('pass-logo'); const topbar = document.querySelector('.topbar');
-      // addEventListener (in addition to inline onclick)
       if(btn) btn.addEventListener('click', openAdminLogin);
       if(img) img.addEventListener('click', openAdminLogin);
-      // Event delegation fallback
       document.addEventListener('click', (e)=>{ if(e.target.closest('#logoBtn') || e.target.closest('#pass-logo')) openAdminLogin(); });
-      // Keyboard shortcut
       document.addEventListener('keydown', (e)=>{ if(e.ctrlKey && e.altKey && (e.key==='a'||e.key==='A')) openAdminLogin(); });
-      // Shift + double-click on topbar
       if(topbar) topbar.addEventListener('dblclick', (e)=>{ if(e.shiftKey) openAdminLogin(); });
-      // Long-press on logo
       let lpTimer=null; const start=()=>{ lpTimer=setTimeout(openAdminLogin, 650); }; const clear=()=>{ if(lpTimer){clearTimeout(lpTimer); lpTimer=null;} };
-      if(btn){ btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start); btn.addEventListener('mouseup', clear); btn.addEventListener('mouseleave', clear); btn.addEventListener('touchend', clear); }
-      if(img){ img.addEventListener('mousedown', start); img.addEventListener('touchstart', start); img.addEventListener('mouseup', clear); img.addEventListener('mouseleave', clear); img.addEventListener('touchend', clear); }
+      if(btn){ btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start);
+               btn.addEventListener('mouseup', clear); btn.addEventListener('mouseleave', clear); btn.addEventListener('touchend', clear); }
+      if(img){ img.addEventListener('mousedown', start); img.addEventListener('touchstart', start);
+               img.addEventListener('mouseup', clear); img.addEventListener('mouseleave', clear); img.addEventListener('touchend', clear); }
     }
 
-    // --- Auto-load questions from any/all JSON files in the repo folder ---
-    async function autoLoadQuestionsFromRepo(){
-      // If already embedded, keep them but also try to merge in others.
-      const beforeCount = window.QUESTIONS.length;
-      try{
-        const base = new URL('.', location.href).href;
-        const files = await discoverJsonLikeFiles(base);
-        if (files.length){
-          const all = [];
-          for (const url of files){
-            try{
-              const txt = await fetch(url, {cache:'no-cache'}).then(r=> r.ok ? r.text() : Promise.reject(new Error(r.status+' '+r.statusText)));
-              let data = null;
-              // JSON first
-              try { data = JSON.parse(txt); }
-              catch(_){
-                // Try to extract an array from a JS assignment (same regex as Import)
-                const m = txt.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*\]);?/);
-                if (m){ try { data = JSON.parse(m[1]); } catch(__){} }
-              }
-              if (!data) continue;
-              const arr = Array.isArray(data) ? data : (data && Array.isArray(data.questions) ? data.questions : null);
-              if (arr) all.push(...arr);
-            }catch(e){ /* ignore a bad file and continue */ }
-          }
-          if (all.length){
-            mergeQuestions(normalizeArray(all));
-            if (window.QUESTIONS.length && beforeCount===0) render(); else updateTopbar();
-          }
-        } else {
-          // Also check for a manifest if present
-          await tryManifestMerge(base, ['questions-index.json','index.json','manifest.json']);
-        }
-      }catch(e){
-        // Silent failure; user can still use Import
-        console.warn('Auto-load failed:', e);
+    // ---------------------------
+    // Auto-load question sources
+    // ---------------------------
+
+    function parseQuestionsFromText(txt){
+      // Try JSON
+      try {
+        const data = JSON.parse(txt);
+        if (Array.isArray(data)) return data;
+        if (data && Array.isArray(data.questions)) return data.questions;
+      } catch(_) {}
+      // Try JS assignment with array
+      const m = txt.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*\]);?/);
+      if (m){
+        try { return JSON.parse(m[1]); } catch(_) {}
       }
+      return null;
     }
 
-    async function discoverJsonLikeFiles(base){
-      const found = new Set();
-      // Try directory listings on common dirs
-      const dirs = ['', 'questions/', 'data/', 'assets/', 'json/'];
-      for (const d of dirs){
-        try{
-          const res = await fetch(new URL(d, base), {cache:'no-cache'});
-          if (!res.ok) continue;
-          const ct = res.headers.get('content-type')||'';
-          if (!ct.includes('text/html')) continue;
-          const html = await res.text();
-          const a = Array.from(html.matchAll(/href\s*=\s*"(.*?)"/gi)).map(m=>m[1]);
-          for (let href of a){
-            // Resolve relative links
-            try{
-              const u = new URL(href, new URL(d, base));
-              if (u.origin !== location.origin) continue;
-              const p = u.pathname;
-              if (/\.(json|js)$/i.test(p) && !/\/index\.html?$/i.test(p)){
-                found.add(u.href);
-              }
-            }catch(_){}
-          }
-        }catch(_){}
-      }
-      return Array.from(found);
+    function isLikelyQuestionsFile(path){
+      const p = (path||'').toLowerCase();
+      if (!/\.(json|js)$/.test(p)) return false;
+      return p.includes('question') || p.includes('questions') || p.includes('qbank') || p.includes('omm') || p.includes('comlex');
     }
-
-    async function tryManifestMerge(base, names){
-      for (const name of names){
-        try{
-          const res = await fetch(new URL(name, base), {cache:'no-cache'});
-          if (!res.ok) continue;
-          const list = await res.json();
-          if (Array.isArray(list)){
-            const files = list.map(p=> new URL(p, base).href);
-            const all = [];
-            for (const f of files){
-              try{
-                const txt = await fetch(f, {cache:'no-cache'}).then(r=> r.text());
-                let data = null;
-                try { data = JSON.parse(txt); } catch(_){
-                  const m = txt.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*\]);?/);
-                  if (m){ try { data = JSON.parse(m[1]); } catch(__){} }
-                }
-                const arr = Array.isArray(data) ? data : (data && Array.isArray(data.questions) ? data.questions : null);
-                if (arr) all.push(...arr);
-              }catch(_){}
-            }
-            if (all.length) { mergeQuestions(normalizeArray(all)); if (window.QUESTIONS.length) render(); }
-          }
-        }catch(_){}
-      }
-    }
-
-    function mergeQuestions(newQs){
-      // Only keep questions that have at least one option
-      const clean = newQs.filter(q => Array.isArray(q.options) && q.options.length>0);
-      const map = new Map(window.QUESTIONS.map(q => [q.id, q]));
-      for (const q of clean){
-        if (!map.has(q.id)){ map.set(q.id, q); window.QUESTIONS.push(q); }
-      }
-    }
-    // --- end auto-load ---
-
-    window.addEventListener('DOMContentLoaded', async ()=>{ 
-      bindLogoTriggers(); 
-      $('admin-unlock').addEventListener('click', adminUnlock);
-      $('admin-cancel').addEventListener('click', closeAdminLogin);
-      $('backdrop').addEventListener('click', ()=>{ closeAdminLogin(); hideLog(); closeComment(); });
-      // Load any embedded questions immediately
-      try{ const emb = document.getElementById('embedded-questions'); if(emb && emb.textContent.trim()){ const data = JSON.parse(emb.textContent); if(Array.isArray(data)) window.QUESTIONS = normalizeArray(data); } }catch(_){}
-      // Auto-scan repository folder for any/all JSON/JS question files and merge
-      await autoLoadQuestionsFromRepo();
-      if(window.QUESTIONS.length){ render(); } else { updateTopbar(); }
-    });
-
-    // Normalization helpers
-    function pickFields(obj, keys){ for(const k of keys){ if(obj && obj[k]!=null) return obj[k]; } return undefined; }
-    function collectFindings(q){ if (Array.isArray(q.findings)) return q.findings.map(x=>String(x).trim()).filter(Boolean);
-      const keys = ['Finding 1','Finding 2','Finding 3','Finding 4','Finding 5','Finding 6','finding1','finding2','finding3','finding4','finding5','finding6'];
-      const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out.filter(Boolean); }
-    function collectOptions(q){ if (Array.isArray(q.options)) return q.options;
-      const keys = ['Answer Option 1','Answer Option 2','Answer Option 3','Answer Option 4','Answer Option 5','A','B','C','D','E'];
-      const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out; }
-    function collectRationales(q){ if (Array.isArray(q.rationales)) return q.rationales;
-      const keys = ['Rationale 1','Rationale 2','Rationale 3','Rationale 4','Rationale 5','RA','RB','RC','RD','RE'];
-      const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out; }
 
     function normalizeQuestion(q, i){ 
       const options = collectOptions(q).slice(0,5).map(o=> (typeof o==='object'&&o.text) ? String(o.text) : String(o||'')).map(s=>s.trim());
       const rationales = collectRationales(q).slice(0,5).map(r=> (typeof r==='object'&&r.rationale) ? String(r.rationale) : String(r||'')).map(s=>s.trim());
       let correctIndex = (typeof q.correctIndex === "number") ? q.correctIndex : -1;
-      if(correctIndex<0){ const corr = pickFields(q,['Correct','correct','answer','correctLetter']); if(typeof corr==='number') correctIndex=corr; else if(typeof corr==='string'){ const map={A:0,B:1,C:2,D:3,E:4}; const up=corr.trim().toUpperCase(); if(map.hasOwnProperty(up)) correctIndex=map[up]; } }
-      if(correctIndex<0){ const diag=String(q.diagnosis??q.answerText??'').trim().toLowerCase(); for (let k=0;k<options.length;k++){ if ((options[k]||'').trim().toLowerCase()===diag){ correctIndex=k; break; } } }
+      if(correctIndex<0){
+        const corr = pickFields(q,['Correct','correct','answer','correctLetter']);
+        if(typeof corr==='number') correctIndex=corr;
+        else if(typeof corr==='string'){
+          const map={A:0,B:1,C:2,D:3,E:4}; const up=corr.trim().toUpperCase(); if(map.hasOwnProperty(up)) correctIndex=map[up];
+        }
+      }
+      if(correctIndex<0){
+        const diag=String(q.diagnosis??q.answerText??'').trim().toLowerCase();
+        for (let k=0;k<options.length;k++){ if ((options[k]||'').trim().toLowerCase()===diag){ correctIndex=k; break; } }
+      }
       const findings = collectFindings(q);
       const vignette = String(q.vignette??q.stem??'').trim();
       const id = normID(pickFields(q,['id','ID','qid','Question ID']), i);
@@ -406,18 +318,160 @@
     }
     function normalizeArray(arr){ return arr.map((q,i)=>normalizeQuestion(q,i)); }
 
+    function pickFields(obj, keys){ for(const k of keys){ if(obj && obj[k]!=null) return obj[k]; } return undefined; }
+    function collectFindings(q){
+      if (Array.isArray(q.findings)) return q.findings.map(x=>String(x).trim()).filter(Boolean);
+      const keys = ['Finding 1','Finding 2','Finding 3','Finding 4','Finding 5','Finding 6','finding1','finding2','finding3','finding4','finding5','finding6'];
+      const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out.filter(Boolean);
+    }
+    function collectOptions(q){
+      if (Array.isArray(q.options)) return q.options;
+      const keys = ['Answer Option 1','Answer Option 2','Answer Option 3','Answer Option 4','Answer Option 5','A','B','C','D','E'];
+      const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out;
+    }
+    function collectRationales(q){
+      if (Array.isArray(q.rationales)) return q.rationales;
+      const keys = ['Rationale 1','Rationale 2','Rationale 3','Rationale 4','Rationale 5','RA','RB','RC','RD','RE'];
+      const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out;
+    }
+
+    function mergeQuestions(newQs){
+      // Only keep questions that have at least one option
+      const clean = (newQs||[]).filter(q => Array.isArray(q.options) && q.options.length>0);
+      const seen = new Set(window.QUESTIONS.map(q => q.id));
+      for (const q of clean){
+        if (!seen.has(q.id)){ seen.add(q.id); window.QUESTIONS.push(q); }
+      }
+    }
+
+    async function fetchMaybe(url){
+      const res = await fetch(url, {cache:'no-cache'});
+      if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+      return res.text();
+    }
+
+    async function tryCommonPaths(){
+      const bases = ['', 'questions/', 'data/', 'json/', 'assets/'];
+      const names = [
+        'updated_questions.json','questions.json','pass_questions.json','omm_questions.json','comlex_questions.json','qbank.json',
+        'updated_questions.js','questions.js','pass_questions.js','omm_questions.js','comlex_questions.js','qbank.js'
+      ];
+      const found = [];
+      for (const b of bases){
+        for (const n of names){
+          const url = new URL(b + n, location.href).href;
+          try {
+            const txt = await fetchMaybe(url);
+            const arr = parseQuestionsFromText(txt);
+            if (arr && Array.isArray(arr) && arr.length){
+              mergeQuestions(normalizeArray(arr));
+              window.__loadReport.files.push(url);
+              found.push(url);
+            }
+          } catch(_){ /* ignore */ }
+        }
+      }
+      return found;
+    }
+
+    function detectGitHubProject(){
+      // Works for https://<owner>.github.io/<repo>/... or https://<owner>.github.io/ (user site)
+      const host = location.hostname.toLowerCase();
+      if (!host.endsWith('github.io')) return null;
+      const owner = host.split('.')[0];
+      const parts = location.pathname.split('/').filter(Boolean);
+      const repo = parts.length ? parts[0] : (owner + '.github.io');
+      return {owner, repo};
+    }
+
+    async function listRepoTree(owner, repo, branch){
+      const url = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+      const res = await fetch(url, {headers: {'Accept':'application/vnd.github+json'}});
+      if (!res.ok) throw new Error('Tree ' + branch + ' ' + res.status);
+      return res.json();
+    }
+
+    async function tryGitHubRepo(){
+      const info = detectGitHubProject();
+      if (!info) return [];
+      const branches = ['main','master'];
+      let tree = null, branchUsed = null;
+      for (const br of branches){
+        try { const j = await listRepoTree(info.owner, info.repo, br); tree = j && j.tree; branchUsed = br; break; }
+        catch(_){ /* try next */ }
+      }
+      if (!tree) return [];
+      const paths = tree
+        .filter(n => n.type === 'blob' && /\.(json|js)$/i.test(n.path) && (isLikelyQuestionsFile(n.path) || n.path.startsWith('questions/')))
+        .map(n => n.path);
+
+      const loaded = [];
+      for (const p of paths){
+        const raw = `https://raw.githubusercontent.com/${info.owner}/${info.repo}/${branchUsed}/${p}`;
+        try {
+          const txt = await fetchMaybe(raw);
+          const arr = parseQuestionsFromText(txt);
+          if (arr && Array.isArray(arr) && arr.length){
+            mergeQuestions(normalizeArray(arr));
+            window.__loadReport.files.push(raw);
+            loaded.push(raw);
+          }
+        } catch(_){ /* continue */ }
+      }
+      return loaded;
+    }
+
+    async function autoLoadQuestions(){
+      const report = window.__loadReport;
+      // 1) embedded
+      try{
+        const emb = document.getElementById('embedded-questions');
+        if (emb && emb.textContent.trim()){
+          const data = JSON.parse(emb.textContent);
+          if (Array.isArray(data) && data.length){
+            mergeQuestions(normalizeArray(data));
+            report.files.push('[embedded]');
+          }
+        }
+      }catch(_){}
+
+      // 2) common paths
+      const localFound = await tryCommonPaths();
+
+      // 3) GitHub repo crawl (if on github.io)
+      const ghFound = await tryGitHubRepo();
+
+      report.total = window.QUESTIONS.length;
+      const uniqueFiles = Array.from(new Set(report.files));
+      if (window.QUESTIONS.length){
+        setVignetteStatus(`Loaded ${window.QUESTIONS.length} questions from ${uniqueFiles.length} file${uniqueFiles.length===1?'':'s'}.`);
+      } else {
+        setVignetteStatus('No question files found automatically. You can still use Import (admin) to load a JSON/JS file.');
+      }
+      console.log('Auto-load report:', {files: uniqueFiles, totalQuestions: report.total});
+    }
+    // ---------------------------
+
+    window.addEventListener('DOMContentLoaded', async ()=>{ 
+      bindLogoTriggers(); 
+      $('admin-unlock').addEventListener('click', adminUnlock);
+      $('admin-cancel').addEventListener('click', closeAdminLogin);
+      $('backdrop').addEventListener('click', ()=>{ closeAdminLogin(); hideLog(); closeComment(); });
+
+      updateTopbar();
+
+      // Auto-load (embedded -> common paths -> GitHub crawl)
+      await autoLoadQuestions();
+
+      if(window.QUESTIONS.length){ render(); }
+    });
+
     function importQuestions(){ if (!window.__adminUnlocked){ alert('Admin tools are locked. Click the PASS logo and enter the password.'); return; }
       const file = $('fileInput').files[0]; if(!file){ alert('Choose your updated_questions.json (or .js) first.'); return; }
       const reader = new FileReader();
       reader.onload = (e)=>{ const text=e.target.result;
-        try{ const data=JSON.parse(text);
-          if (Array.isArray(data)) window.QUESTIONS = normalizeArray(data);
-          else if (data && Array.isArray(data.questions)) window.QUESTIONS = normalizeArray(data.questions);
-          else throw new Error('JSON root not array');
-          resetState(); render(); return;
-        }catch(_){}
-        const m=text.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*\]);?/);
-        if (m){ try{ const arr=JSON.parse(m[1]); window.QUESTIONS = normalizeArray(arr); resetState(); render(); return; }catch(e2){ alert('Found JS array but parse failed: '+e2.message); return; } }
+        const arr = parseQuestionsFromText(text);
+        if (arr && Array.isArray(arr)){ window.QUESTIONS = normalizeArray(arr); resetState(); render(); return; }
         alert('Could not parse file. Provide a JSON array or a JS file that assigns an array.');
       };
       reader.readAsText(file);
@@ -438,7 +492,12 @@
     }
 
     function render(){ const q = window.QUESTIONS[idx];
-      if(!q){ $('qid').textContent=''; $('meta').textContent=''; $('vignette').textContent='Choose your updated_questions.json (or .js) and click Import (admin only).'; $('findings').innerHTML=''; $('options').innerHTML=''; $('reveal-controls').style.display='none'; updateTopbar(); return; }
+      if(!q){
+        $('qid').textContent=''; $('meta').textContent='';
+        // leave the status message in vignette if nothing loaded
+        $('findings').innerHTML=''; $('options').innerHTML='';
+        $('reveal-controls').style.display='none'; updateTopbar(); return;
+      }
       $('qid').textContent = q.id || ('Q'+(idx+1));
       $('meta').textContent = 'Question ' + (idx+1) + ' of ' + window.QUESTIONS.length;
       $('vignette').textContent = q.vignette || '';
@@ -471,7 +530,6 @@
     function goTo(){ const n = parseInt(document.getElementById('goto').value,10); if(!isNaN(n)&&n>=1&&n<=window.QUESTIONS.length){ stopTimer(); idx=n-1; render(); } }
     function strike(i){ const optDivs=document.getElementById('options').querySelectorAll('.option'); const target=optDivs[i]?.children[1]; if(target) target.classList.toggle('struck'); }
 
-    // NEW: Random button handler (respects review mode)
     function randomQ(){
       stopTimer();
       let pool = window.__reviewMode ? window.__reviewQueue : window.QUESTIONS.map((_,i)=>i);
@@ -517,7 +575,6 @@
     function downloadLog(){ const blob = new Blob([JSON.stringify(window.CHANGE_LOG, null, 2)], {type:'application/json'});
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='PASS_ChangeLog.json'; a.click(); }
 
-    // Save (embed)
     function saveHTML(){ if (!window.__adminUnlocked){ alert('Admin tools are locked.'); return; }
       const data = JSON.stringify(window.QUESTIONS, null, 2);
       const doc = document.documentElement.cloneNode(true);
@@ -528,8 +585,7 @@
       const ts = new Date().toISOString().replace(/[:.]/g,'-'); a.download = 'PASS_COMLEX_OMM_QBank_'+ts+'.html'; a.click();
     }
 
-    // Comments
-    function openComment(){ document.getElementById('cmt_email').value=''; document.getElementById('cmt_subject').value=''; document.getElementById('cmt_body').value=''; document.getElementById('cmt_msg').textContent=''; showModal('comment-modal', true); }
+    function openComment(){ $('cmt_email').value=''; $('cmt_subject').value=''; $('cmt_body').value=''; $('cmt_msg').textContent=''; showModal('comment-modal', true); }
     function closeComment(){ showModal('comment-modal', false); }
     function collectMeta(){ const q=window.QUESTIONS[idx]||{}; return { id:q.id||'', selection: window.__answered[idx], time: (window.__timeSpent[idx]||0), ua:navigator.userAgent }; }
     function copyComment(){ const meta=collectMeta(); const msg=`[Question ${meta.id}]
@@ -537,26 +593,25 @@ Selection: ${meta.selection}
 Time(ms): ${meta.time}
 UA: ${meta.ua}
 
-` + document.getElementById('cmt_body').value;
-      navigator.clipboard.writeText(msg).then(()=>{ document.getElementById('cmt_msg').textContent='Copied to clipboard.'; });
+` + $('cmt_body').value;
+      navigator.clipboard.writeText(msg).then(()=>{ $('cmt_msg').textContent='Copied to clipboard.'; });
     }
-    function saveCommentCSV(){ const meta=collectMeta(); const rows=[['id','selection','time_ms','ua','email','subject','comment'],[meta.id,meta.selection,meta.time,meta.ua, document.getElementById('cmt_email').value, document.getElementById('cmt_subject').value, document.getElementById('cmt_body').value.replace(/\n/g,' ')]];
+    function saveCommentCSV(){ const meta=collectMeta(); const rows=[['id','selection','time_ms','ua','email','subject','comment'],[meta.id,meta.selection,meta.time,meta.ua, $('cmt_email').value, $('cmt_subject').value, $('cmt_body').value.replace(/\n/g,' ')]];
       const csv=rows.map(r=>r.map(x=>`"${String(x??'').replace(/"/g,'""')}"`).join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv'});
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='PASS_Comments.csv'; a.click(); }
-    function sendComment(){ const meta=collectMeta(); const subject=encodeURIComponent('PASS OMM feedback: '+(document.getElementById('cmt_subject').value||meta.id)); 
+    function sendComment(){ const meta=collectMeta(); const subject=encodeURIComponent('PASS OMM feedback: '+($('cmt_subject').value||meta.id)); 
       const body=encodeURIComponent(`[Question ${meta.id}]
 Selection: ${meta.selection}
 Time(ms): ${meta.time}
 UA: ${meta.ua}
 
-` + document.getElementById('cmt_body').value);
-      window.location.href = `mailto:OMMtutor@passprogram.net?subject=${subject}&body=${body}`; document.getElementById('cmt_msg').textContent='Email draft opened in your client (mailto).'; }
+` + $('cmt_body').value);
+      window.location.href = `mailto:OMMtutor@passprogram.net?subject=${subject}&body=${body}`; $('cmt_msg').textContent='Email draft opened in your client (mailto).'; }
 
-    // Keyboard nav (+ Random on "r")
     document.addEventListener('keydown', function(e){
       if (e.key==='ArrowRight'){ e.preventDefault(); nextQ(); }
       else if (e.key==='ArrowLeft'){ e.preventDefault(); prevQ(); }
-      else if (e.key.toLowerCase()==='r'){ e.preventDefault(); randomQ(); }
+      else if (e.key && e.key.toLowerCase()==='r'){ e.preventDefault(); randomQ(); }
     });
   </script>
 </body>
