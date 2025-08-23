@@ -13,7 +13,8 @@
             display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
   .brand { font-size:1.05rem; font-weight:700; letter-spacing:.2px; }
   .logo-btn { display:flex; align-items:center; border:none; background:transparent; padding:0; margin:0; position:relative; z-index:2; }
-  #pass-logo { height:38px; width:auto; cursor:pointer; outline:none; }
+  /* Bigger logo */
+  #pass-logo { height:52px; width:auto; cursor:pointer; outline:none; object-fit:contain; }
   #pass-logo:focus-visible { box-shadow:0 0 0 3px rgba(214,158,46,.45); border-radius:4px; }
   .controls-inline > * { margin-right:8px; }
   .btn { padding:10px 16px; border:none; border-radius:8px; cursor:pointer; color:#fff; background:var(--pass-navy); }
@@ -77,7 +78,7 @@
         <button class="btn outline" onclick="openComment()">Comment</button>
       </div>
 
-      <!-- Logo: default to PASS%20Logo.png, then JS will auto-resolve alternatives -->
+      <!-- Logo (auto-resolves if moved) -->
       <button id="logoBtn" class="logo-btn" type="button" aria-label="Open admin login"
               onclick="openAdminLogin();" onkeydown="if(event.key==='Enter'||event.key===' '){openAdminLogin(); event.preventDefault();}">
         <img id="pass-logo" src="PASS%20Logo.png" alt="PASS Program logo" onclick="openAdminLogin();" />
@@ -192,7 +193,7 @@
     <div class="small-note" style="margin-top:6px;">
       We include metadata with your comment: Question ID, current selection, time on question, and browser info.
     </div>
-    <div class="row" style="margin-top:10px;">
+    <div class="row" style="margin-top:10px%;">
       <button class="btn" onclick="sendComment()">Send Email</button>
       <button class="btn secondary" onclick="copyComment()">Copy to clipboard</button>
       <button class="btn outline" onclick="saveCommentCSV()">Save comments (.csv)</button>
@@ -243,11 +244,7 @@
         'img/PASS%20Logo.png','img/PASS Logo.png',
         'pass-logo.png','assets/pass-logo.png','images/pass-logo.png','img/pass-logo.png'
       ];
-      // If default loads, we're done.
-      try {
-        if (img.complete && img.naturalWidth > 0) return;
-      } catch(_) {}
-
+      try { if (img.complete && img.naturalWidth > 0) return; } catch(_) {}
       for (const rel of candidates){
         try{
           const u = new URL(rel, base);
@@ -259,11 +256,10 @@
           }
         }catch(_){}
       }
-      // Fallback: tiny inline SVG so the button stays visible/clickable
       img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="38">
+        `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="52">
            <rect width="100%" height="100%" fill="#0A1E3A"/>
-           <text x="10" y="26" font-family="Segoe UI,Arial" font-size="18" fill="#ffffff">PASS Program</text>
+           <text x="10" y="34" font-family="Segoe UI,Arial" font-size="22" fill="#ffffff">PASS Program</text>
          </svg>`);
     }
     /* --------------- END LOGO AUTODETECT --------------- */
@@ -504,13 +500,30 @@
       }
       const openSet=getOpenSet(idx); if(openSet.has(i)) openSet.delete(i); else openSet.add(i); render();
     }
-    function revealCorrect(){ const q=window.QUESTIONS[idx]; const ci=q.correctIndex; if(typeof ci!=='number'||ci<0) return; const openSet=getOpenSet(idx); openSet.add(ci); render(); $('btn-next-after').style.display='inline-block'; if(window.__missed.length) $('btn-review').style.display='inline-block'; }
+    function revealCorrect(){ const q=window.QUESTIONS[idx]; const ci=q.correctIndex; if(typeof ci!=='number'||ci<0) return; const openSet=getOpenSet(idx); openSet.add(ci); render(); $('btn-next-after').style.display='inline-block'; if(window.__missed.length) $('btn-review').display='inline-block'; }
     function revealAll(){ const q=window.QUESTIONS[idx]; const openSet=getOpenSet(idx); (q.options||[]).forEach((_,i)=> openSet.add(i)); render(); $('btn-next-after').style.display='inline-block'; if(window.__missed.length) $('btn-review').style.display='inline-block'; }
     function startReview(){ if(!window.__missed.length){ alert('No incorrect answers to review.'); return; } window.__reviewQueue = Array.from(new Set(window.__missed)); window.__reviewMode = true; window.__reviewPtr=0; idx=window.__reviewQueue[0]; render(); }
     function nextQ(){ stopTimer(); if(window.__reviewMode){ if(window.__reviewPtr < window.__reviewQueue.length-1){ window.__reviewPtr += 1; idx = window.__reviewQueue[window.__reviewPtr]; render(); return; } else window.__reviewMode=false; } if(idx < window.QUESTIONS.length-1){ idx += 1; render(); } }
     function prevQ(){ stopTimer(); if(window.__reviewMode){ if(window.__reviewPtr>0){ window.__reviewPtr -= 1; idx = window.__reviewQueue[window.__reviewPtr]; render(); return; } else window.__reviewMode=false; } if(idx>0){ idx -= 1; render(); } }
     function goTo(){ const n = parseInt($('goto').value,10); if(!isNaN(n)&&n>=1&&n<=window.QUESTIONS.length){ stopTimer(); idx=n-1; render(); } }
     function strike(i){ const optDivs=$('options').querySelectorAll('.option'); const target=optDivs[i]?.children[1]; if(target) target.classList.toggle('struck'); }
+
+    /* Restored: Random button handler (works in normal & review mode) */
+    function randomQ(){
+      stopTimer();
+      const pool = window.__reviewMode ? window.__reviewQueue : window.QUESTIONS.map((_,i)=>i);
+      if (!pool.length) return;
+      const current = window.__reviewMode ? window.__reviewQueue[window.__reviewPtr] : idx;
+      let next = current;
+      if (pool.length === 1) next = pool[0];
+      else {
+        while (next === current) next = pool[Math.floor(Math.random()*pool.length)];
+      }
+      if (window.__reviewMode){ window.__reviewPtr = pool.indexOf(next); }
+      idx = next;
+      render();
+    }
+
     function fillEditor(){ const q=window.QUESTIONS[idx]||{vignette:'',findings:[],options:[],rationales:[],correctIndex:-1};
       $('ed_vignette').value=q.vignette||''; $('ed_findings').value=(q.findings||[]).join('\n');
       $('ed_options').value=(q.options||[]).join('\n'); $('ed_rationales').value=(q.rationales||[]).join('\n');
@@ -585,13 +598,13 @@ UA: ${meta.ua}
 
     window.addEventListener('DOMContentLoaded', async ()=>{
       bindLogoTriggers();
-      resolveLogo();            // <— set the logo source if needed
+      resolveLogo();
 
       $('admin-unlock').addEventListener('click', adminUnlock);
       $('admin-cancel').addEventListener('click', closeAdminLogin);
       $('backdrop').addEventListener('click', ()=>{ closeAdminLogin(); hideLog(); closeComment(); });
 
-      await autoLoadAll();      // autoload any JSON files found
+      await autoLoadAll();
 
       if(window.QUESTIONS.length){ render(); }
       else { updateTopbar(); }
