@@ -219,6 +219,7 @@
 
     const $ = (id) => document.getElementById(id);
     function escapeHTML(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+    function renderText(s){ return escapeHTML(String(s??"")).replace(/\n/g,"<br>"); }
     function normID(v, i){ const n = parseInt(v,10); return isFinite(n) ? ("Q"+String(n).padStart(4,"0")) : ("Q"+String(i+1).padStart(4,"0")); }
     function getOpenSet(qi){ if(!window.__expOpen[qi]) window.__expOpen[qi] = new Set(); return window.__expOpen[qi]; }
     function formatTime(ms){ const s=Math.floor(ms/1000); const m=Math.floor(s/60); const r=s%60; return m+":"+String(r).padStart(2,"0"); }
@@ -271,25 +272,108 @@
       }
       return null;
     }
+
+    function first(x, keys){
+      for (const k of keys){
+        if (x && x[k]!=null) return x[k];
+      }
+      return undefined;
+    }
+
+    function optionTextFromObj(o){
+      return first(o, ['text','label','option','answer','value','choice','title','name']);
+    }
+    function optionRationaleFromObj(o){
+      return first(o, ['rationale','explanation','exp','why','reason','detail','details','note','notes','desc','description']);
+    }
+
     function pickFields(obj, keys){ for(const k of keys){ if(obj && obj[k]!=null) return obj[k]; } return undefined; }
+
     function collectFindings(q){
       if (Array.isArray(q.findings)) return q.findings.map(x=>String(x).trim()).filter(Boolean);
       const keys = ['Finding 1','Finding 2','Finding 3','Finding 4','Finding 5','Finding 6','finding1','finding2','finding3','finding4','finding5','finding6'];
       const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out.filter(Boolean);
     }
+
+    // returns {texts:[], ratsFromOptions:[]}
     function collectOptions(q){
-      if (Array.isArray(q.options)) return q.options;
+      const out = [];
+      const rats = [];
+      if (Array.isArray(q.options)){
+        for (const it of q.options){
+          if (it && typeof it === 'object'){
+            const t = optionTextFromObj(it);
+            if (t!=null){ out.push(String(t)); rats.push(String(optionRationaleFromObj(it) ?? "")); }
+            else { out.push(String(it.text ?? it.label ?? '')); rats.push(String(optionRationaleFromObj(it) ?? "")); }
+          } else {
+            out.push(String(it ?? ''));
+            rats.push('');
+          }
+        }
+        return {texts: out.map(s=>s.trim()).slice(0,5), ratsFromOptions: rats.slice(0,5)};
+      }
+      // Legacy scattered fields A..E, Answer Option N, etc.
       const keys = ['Answer Option 1','Answer Option 2','Answer Option 3','Answer Option 4','Answer Option 5','A','B','C','D','E'];
-      const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out;
+      for(const k of keys){ if(q[k]!=null) out.push(String(q[k])); }
+      return {texts: out.map(s=>s.trim()).slice(0,5), ratsFromOptions: new Array(out.length).fill('')};
     }
-    function collectRationales(q){
-      if (Array.isArray(q.rationales)) return q.rationales;
-      const keys = ['Rationale 1','Rationale 2','Rationale 3','Rationale 4','Rationale 5','RA','RB','RC','RD','RE'];
-      const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out;
+
+    function collectRationales(q, optLen, ratsFromOptions){
+      // 1) Array on top-level: rationales / explanations
+      const fromArray = (arr) => arr.slice(0,5).map(r=>{
+        if (r && typeof r === 'object') return String(first(r, ['rationale','explanation','why','reason','detail','details','desc','description']) ?? '');
+        return String(r ?? '');
+      });
+
+      if (Array.isArray(q.rationales)) return padTo(fromArray(q.rationales), optLen);
+      if (Array.isArray(q.explanations)) return padTo(fromArray(q.explanations), optLen);
+
+      // 2) Object map: {A: "...", B: "..."} or {1:"..."}
+      const objCandidates = ['rationales','explanations','Rationales','Explanations','RA','RB','RC','RD','RE'];
+      for (const key of objCandidates){
+        const v = q[key];
+        if (v && typeof v === 'object' && !Array.isArray(v)){
+          const map = v;
+          const letters = ['A','B','C','D','E'];
+          const nums = ['1','2','3','4','5'];
+          const out = [];
+          for (let i=0;i<optLen;i++){
+            out.push(String(map[letters[i]] ?? map[nums[i]] ?? ''));
+          }
+          if (out.some(s=>s)) return padTo(out, optLen);
+        }
+      }
+
+      // 3) Scattered top-level fields: "Rationale 1..5" / "Explanation 1..5" / "RA..RE"
+      const out = [];
+      const fields = [
+        ['Rationale 1','Rationale 2','Rationale 3','Rationale 4','Rationale 5'],
+        ['Explanation 1','Explanation 2','Explanation 3','Explanation 4','Explanation 5'],
+        ['RA','RB','RC','RD','RE'],
+      ];
+      for (const set of fields){
+        const temp = set.map(k => (q[k]!=null) ? String(q[k]) : '');
+        if (temp.some(s=>s)) return padTo(temp, optLen);
+      }
+
+      // 4) Fallback: per-option rationale stored on option objects
+      if (ratsFromOptions && ratsFromOptions.some(s=>s)) return padTo(ratsFromOptions, optLen);
+
+      // 5) Nothing found
+      return padTo([], optLen);
     }
+
+    function padTo(arr, len){
+      const out = arr.slice(0,len);
+      while (out.length < len) out.push('');
+      return out;
+    }
+
     function normalizeQuestion(q, i){ 
-      const options = collectOptions(q).slice(0,5).map(o=> (typeof o==='object'&&o.text) ? String(o.text) : String(o||'')).map(s=>s.trim());
-      const rationales = collectRationales(q).slice(0,5).map(r=> (typeof r==='object'&&r.rationale) ? String(r.rationale) : String(r||'')).map(s=>s.trim());
+      const {texts: options, ratsFromOptions} = collectOptions(q);
+      const rationales = collectRationales(q, options.length, ratsFromOptions)
+        .map(s => String(s).trim());
+
       let correctIndex = (typeof q.correctIndex === "number") ? q.correctIndex : -1;
       if(correctIndex<0){
         const corr = pickFields(q,['Correct','correct','answer','correctLetter']);
@@ -312,54 +396,32 @@
       for (const q of clean){ if (!seen.has(q.id)){ seen.add(q.id); window.QUESTIONS.push(q); } }
     }
 
-    // ---------- GitHub repo discovery ----------
+    // ---------- GitHub repo discovery (for autoload) ----------
     function detectGitHubProject(){
       const host = location.hostname.toLowerCase();
       if (!host.endsWith('github.io')) return null;
-      const owner = host.split('.')[0];                          // passcomlex
+      const owner = host.split('.')[0];
       const parts = location.pathname.split('/').filter(Boolean);
-      const repo = parts.length ? parts[0] : (owner + '.github.io'); // COMLEX-qbank-v5
+      const repo = parts.length ? parts[0] : (owner + '.github.io');
       return {owner, repo};
     }
-
-    async function gh_json(url){
-      const r = await fetch(url, {headers: {'Accept':'application/vnd.github+json'}});
-      if(!r.ok) throw new Error(r.status+' '+r.statusText);
-      return r.json();
-    }
-
-    async function gh_getDefaultBranch(owner, repo){
-      const meta = await gh_json(`https://api.github.com/repos/${owner}/${repo}`);
-      return meta.default_branch || 'main';
-    }
-
-    async function gh_listTree(owner, repo, branch){
-      return gh_json(`https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`);
-    }
-
+    async function gh_json(url){ const r = await fetch(url, {headers: {'Accept':'application/vnd.github+json'}}); if(!r.ok) throw new Error(r.status+' '+r.statusText); return r.json(); }
+    async function gh_getDefaultBranch(owner, repo){ const meta = await gh_json(`https://api.github.com/repos/${owner}/${repo}`); return meta.default_branch || 'main'; }
+    async function gh_listTree(owner, repo, branch){ return gh_json(`https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`); }
     async function loadFromGitHub(){
       const info = detectGitHubProject();
       if (!info) return [];
       let branch = null;
-      try {
-        branch = await gh_getDefaultBranch(info.owner, info.repo); // handles gh-pages too
-      } catch(e){
-        // fallback attempts
-        for (const b of ['main','master','gh-pages']){
-          try { await gh_listTree(info.owner, info.repo, b); branch=b; break; } catch(_){}
-        }
-      }
+      try { branch = await gh_getDefaultBranch(info.owner, info.repo); }
+      catch(e){ for (const b of ['main','master','gh-pages']){ try { await gh_listTree(info.owner, info.repo, b); branch=b; break; } catch(_){}} }
       if (!branch) return [];
       window.__loadReport.branch = branch;
-
       let treeJson;
       try { treeJson = await gh_listTree(info.owner, info.repo, branch); }
       catch(e){ window.__loadReport.errors.push('tree:'+e.message); return []; }
-
       const paths = (treeJson.tree||[])
         .filter(n => n.type==='blob' && /\.(json|js)$/i.test(n.path))
         .map(n => n.path);
-
       const loaded = [];
       for (const p of paths){
         const raw = `https://raw.githubusercontent.com/${info.owner}/${info.repo}/${branch}/${p}`;
@@ -376,13 +438,11 @@
       return loaded;
     }
 
-    // ---------- Local common paths ----------
     async function fetchMaybe(url){
       const res = await fetch(url, {cache:'no-cache'});
       if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
       return res.text();
     }
-
     async function tryCommonPaths(){
       const bases = ['', 'questions/', 'data/', 'json/', 'assets/'];
       const names = [
@@ -407,28 +467,17 @@
       return found;
     }
 
-    // ---------- Auto loader ----------
     async function autoLoadQuestions(){
       const report = window.__loadReport;
-
-      // 1) embedded
       try{
         const emb = document.getElementById('embedded-questions');
         if (emb && emb.textContent.trim()){
           const data = JSON.parse(emb.textContent);
-          if (Array.isArray(data) && data.length){
-            mergeQuestions(normalizeArray(data));
-            report.files.push('[embedded]');
-          }
+          if (Array.isArray(data) && data.length){ mergeQuestions(normalizeArray(data)); report.files.push('[embedded]'); }
         }
       }catch(_){}
-
-      // 2) local common paths
       await tryCommonPaths();
-
-      // 3) GitHub crawl on default branch (main/master/gh-pages/whatever)
       await loadFromGitHub();
-
       report.total = window.QUESTIONS.length;
       const uniqueFiles = Array.from(new Set(report.files));
       if (window.QUESTIONS.length){
@@ -465,7 +514,10 @@
     }
     function resetState(){ idx=0; window.__score={attempted:0,correct:0}; window.__missed=[]; window.__answered={}; window.__expOpen={}; window.__qStart=Date.now(); window.__timeSpent={}; window.__reviewMode=false; window.__reviewQueue=[]; window.__reviewPtr=0; }
 
-    function optionHTML(q, i, selectedIndex){ const letters=['A','B','C','D','E']; const opt=escapeHTML((q.options||[])[i]||''); const rat=escapeHTML((q.rationales||[])[i]||'');
+    function optionHTML(q, i, selectedIndex){
+      const letters=['A','B','C','D','E'];
+      const opt=escapeHTML((q.options||[])[i]||'');
+      const rat=renderText((q.rationales||[])[i] || '—');
       return `
         <div class="option" data-idx="${i}" onclick="onOptionClick(${i})">
           <input type="radio" name="ans" ${selectedIndex===i?'checked':''} ${selectedIndex>=0?'disabled':''}>
@@ -474,7 +526,7 @@
         </div>
         <div class="exp-panel exp-neutral" id="exp-${i}">
           <div class="exp-head">Explanation</div>
-          <div class="exp-body">${rat || '—'}</div>
+          <div class="exp-body">${rat}</div>
         </div>`;
     }
 
@@ -482,8 +534,7 @@
       if(!q){
         $('qid').textContent=''; $('meta').textContent='';
         $('findings').innerHTML=''; $('options').innerHTML='';
-        $('reveal-controls').style.display='none'; updateTopbar(); return;
-      }
+        $('reveal-controls').style.display='none'; updateTopbar(); return; }
       $('qid').textContent = q.id || ('Q'+(idx+1));
       $('meta').textContent = 'Question ' + (idx+1) + ' of ' + window.QUESTIONS.length;
       $('vignette').textContent = q.vignette || '';
