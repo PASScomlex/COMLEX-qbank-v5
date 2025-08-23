@@ -260,88 +260,105 @@
       if(img){ img.addEventListener('mousedown', start); img.addEventListener('touchstart', start); img.addEventListener('mouseup', clear); img.addEventListener('mouseleave', clear); img.addEventListener('touchend', clear); }
     }
 
-    // --- Auto-load questions from any/all JSON files in the repo folder ---
-    async function autoLoadQuestionsFromRepo(){
+    // --- Auto-load questions on GitHub Pages (no directory listing) ---
+    async function autoLoadQuestions(){
       const beforeCount = window.QUESTIONS.length;
-      try{
-        const base = new URL('.', location.href).href;
-        const files = await discoverJsonLikeFiles(base);
-        if (files.length){
-          const all = [];
-          for (const url of files){
-            try{
-              const txt = await fetch(url, {cache:'no-cache'}).then(r=> r.ok ? r.text() : Promise.reject(new Error(r.status+' '+r.statusText)));
-              let data = null;
-              try { data = JSON.parse(txt); }
-              catch(_){
-                const m = txt.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*\]);?/);
-                if (m){ try { data = JSON.parse(m[1]); } catch(__){} }
-              }
-              if (!data) continue;
-              const arr = Array.isArray(data) ? data : (data && Array.isArray(data.questions) ? data.questions : null);
-              if (arr) all.push(...arr);
-            }catch(e){ /* ignore bad file */ }
-          }
-          if (all.length){
-            mergeQuestions(normalizeArray(all));
-            if (window.QUESTIONS.length && beforeCount===0) render(); else updateTopbar();
-          }
-        } else {
-          await tryManifestMerge(base, ['questions-index.json','index.json','manifest.json']);
-        }
-      }catch(e){
-        console.warn('Auto-load failed:', e);
-      }
-    }
 
-    async function discoverJsonLikeFiles(base){
-      const found = new Set();
-      const dirs = ['', 'questions/', 'data/', 'assets/', 'json/'];
-      for (const d of dirs){
-        try{
-          const res = await fetch(new URL(d, base), {cache:'no-cache'});
-          if (!res.ok) continue;
-          const ct = res.headers.get('content-type')||'';
-          if (!ct.includes('text/html')) continue;
-          const html = await res.text();
-          const a = Array.from(html.matchAll(/href\s*=\s*"(.*?)"/gi)).map(m=>m[1]);
-          for (let href of a){
+      // 1) Embedded in this HTML?
+      try{
+        const emb = document.getElementById('embedded-questions');
+        if(emb && emb.textContent.trim()){
+          const data = JSON.parse(emb.textContent);
+          if(Array.isArray(data)) window.QUESTIONS = normalizeArray(data);
+        }
+      }catch(_){}
+
+      // 2) Try GitHub API to enumerate files in this repo (works on GitHub Pages)
+      try{
+        const info = detectRepoFromPageURL();
+        if(info){
+          const branch = await getDefaultBranch(info).catch(()=>null) || 'main';
+          const filePaths = await listRepoFiles(info, branch);
+          const candidatePaths = filePaths.filter(p =>
+            /\.(json|js)$/i.test(p) &&
+            !/(^|\/)index\.html?$/i.test(p) &&
+            /(question|qbank|items?|data|json)/i.test(p)
+          );
+          const all = [];
+          for (const p of candidatePaths){
             try{
-              const u = new URL(href, new URL(d, base));
-              if (u.origin !== location.origin) continue;
-              const p = u.pathname;
-              if (/\.(json|js)$/i.test(p) && !/\/index\.html?$/i.test(p)){
-                found.add(u.href);
+              const txt = await fetch(rawURL(info, branch, p), {cache:'no-cache'}).then(r=> r.ok ? r.text() : Promise.reject(new Error(String(r.status))));
+              let data = null;
+              try{ data = JSON.parse(txt); }
+              catch(_){
+                const m = txt.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*?\]);?/);
+                if (m){ try{ data = JSON.parse(m[1]); }catch(__){} }
               }
+              const arr = Array.isArray(data) ? data : (data && Array.isArray(data.questions) ? data.questions : null);
+              if (arr && arr.length) all.push(...arr);
             }catch(_){}
           }
-        }catch(_){}
-      }
-      return Array.from(found);
+          if (all.length) mergeQuestions(normalizeArray(all));
+        }
+      }catch(_){}
+
+      // 3) Optional manifest in root (if you add one later)
+      try{ await tryManifestMerge(['questions-index.json','index.json','manifest.json']); }catch(_){}
+
+      if (window.QUESTIONS.length && beforeCount===0) render(); else updateTopbar();
     }
 
-    async function tryManifestMerge(base, names){
+    function detectRepoFromPageURL(){
+      // e.g., https://passcomlex.github.io/COMLEX-qbank-v5/
+      const host = location.host;          // passcomlex.github.io
+      const path = location.pathname;      // /COMLEX-qbank-v5/...
+      const owner = host.split('.')[0];    // passcomlex
+      const segs = path.replace(/^\/+/,'').split('/');
+      const repo = segs[0] || null;
+      if (!owner || !repo) return null;
+      return { owner, repo };
+    }
+    async function getDefaultBranch({owner, repo}){
+      const url = `https://api.github.com/repos/${owner}/${repo}`;
+      const res = await fetch(url, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-cache'});
+      if(!res.ok) throw new Error('repo meta failed');
+      const j = await res.json();
+      return j.default_branch || 'main';
+    }
+    async function listRepoFiles({owner, repo}, branch){
+      // Git Trees API for a recursive list
+      const url = `https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`;
+      const res = await fetch(url, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-cache'});
+      if(!res.ok) throw new Error('tree failed');
+      const j = await res.json();
+      if (!j.tree) return [];
+      return j.tree.filter(n => n.type==='blob').map(n => n.path);
+    }
+    function rawURL({owner, repo}, branch, path){
+      return `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/${path}`;
+    }
+
+    async function tryManifestMerge(names){
       for (const name of names){
         try{
-          const res = await fetch(new URL(name, base), {cache:'no-cache'});
+          const res = await fetch(name, {cache:'no-cache'});
           if (!res.ok) continue;
           const list = await res.json();
           if (Array.isArray(list)){
-            const files = list.map(p=> new URL(p, base).href);
             const all = [];
-            for (const f of files){
+            for (const p of list){
               try{
-                const txt = await fetch(f, {cache:'no-cache'}).then(r=> r.text());
+                const txt = await fetch(p, {cache:'no-cache'}).then(r=>r.text());
                 let data = null;
                 try { data = JSON.parse(txt); } catch(_){
-                  const m = txt.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*\]);?/);
+                  const m = txt.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*?\]);?/);
                   if (m){ try { data = JSON.parse(m[1]); } catch(__){} }
                 }
                 const arr = Array.isArray(data) ? data : (data && Array.isArray(data.questions) ? data.questions : null);
                 if (arr) all.push(...arr);
               }catch(_){}
             }
-            if (all.length) { mergeQuestions(normalizeArray(all)); if (window.QUESTIONS.length) render(); }
+            if (all.length) mergeQuestions(normalizeArray(all));
           }
         }catch(_){}
       }
@@ -349,9 +366,9 @@
 
     function mergeQuestions(newQs){
       const clean = newQs.filter(q => Array.isArray(q.options) && q.options.length>0);
-      const map = new Map(window.QUESTIONS.map(q => [q.id, q]));
+      const seen = new Set(window.QUESTIONS.map(q => q.id));
       for (const q of clean){
-        if (!map.has(q.id)){ map.set(q.id, q); window.QUESTIONS.push(q); }
+        if (!seen.has(q.id)){ seen.add(q.id); window.QUESTIONS.push(q); }
       }
     }
     // --- end auto-load ---
@@ -361,8 +378,7 @@
       $('admin-unlock').addEventListener('click', adminUnlock);
       $('admin-cancel').addEventListener('click', closeAdminLogin);
       $('backdrop').addEventListener('click', ()=>{ closeAdminLogin(); hideLog(); closeComment(); });
-      try{ const emb = document.getElementById('embedded-questions'); if(emb && emb.textContent.trim()){ const data = JSON.parse(emb.textContent); if(Array.isArray(data)) window.QUESTIONS = normalizeArray(data); } }catch(_){}
-      await autoLoadQuestionsFromRepo();
+      await autoLoadQuestions();
       if(window.QUESTIONS.length){ render(); } else { updateTopbar(); }
     });
 
@@ -397,7 +413,7 @@
         .map(o=> (typeof o==='object' && o && 'text' in o) ? String(o.text) : String(o||''))
         .map(s=>s.trim());
 
-      // Pull rationales from top-level if present; otherwise FALL BACK to options[i].rationale
+      // Rationales: top-level OR options[i].rationale fallback
       let rationales = collectRationales(q)
         .slice(0,5)
         .map(r=> (typeof r==='object' && r && 'rationale' in r) ? String(r.rationale) : String(r||''))
@@ -447,7 +463,7 @@
           else throw new Error('JSON root not array');
           resetState(); render(); return;
         }catch(_){}
-        const m=text.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*\]);?/);
+        const m=text.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*?\]);?/);
         if (m){
           try{ const arr=JSON.parse(m[1]); window.QUESTIONS = normalizeArray(arr); resetState(); render(); return; }
           catch(e2){ alert('Found JS array but parse failed: '+e2.message); return; }
