@@ -164,7 +164,8 @@
       "Spring test is positive",
       "Left ILA is deep/anterior",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -824,7 +825,8 @@
       "L5 F SRRR",
       "Spring test is positive",
       "Left ILA is more shallow than the right",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -864,7 +866,8 @@
       "Right ILA is deeper than the left",
       "Sphinx test is negative",
       "Spring test is negative",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -1534,7 +1537,8 @@
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
       "Right ILA is deep/anterior",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -1611,10 +1615,10 @@
     "findings": [
       "Left ILA is deeper than the right",
       "Spring test is negative",
-      "Right ILA is shallow/posterior",
       "Lumbar lordosis is increased",
       "L5 N SRRL",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -1732,7 +1736,8 @@
     "findings": [
       "Left ILA is more shallow than the right",
       "Lumbar lordosis is decreased",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -2006,7 +2011,8 @@
       "Left ILA is more shallow than the right",
       "Spring test is positive",
       "L5 F SRRR",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -2082,10 +2088,10 @@
     "diagnosis": "Right on Right Sacral Torsion",
     "vignette": "A 51-year-old woman presents with pain with trunk rotation. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Right ILA is shallow/posterior",
       "Spring test is negative",
       "Left ILA is deeper than the right",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -2363,7 +2369,8 @@
       "Lumbar lordosis is increased",
       "Spring test is negative",
       "Seated flexion test is positive on the right",
-      "Right ILA is deeper than the left"
+      "Right ILA is deeper than the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -2911,10 +2918,10 @@
     "findings": [
       "L5 N SRRL",
       "Left ILA is deeper than the right",
-      "Right ILA is shallow/posterior",
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -3146,7 +3153,6 @@
     "diagnosis": "Right on Right Sacral Torsion",
     "vignette": "A 37-year-old man presents with pelvic discomfort. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Right ILA is shallow/posterior",
       "Right sacral sulcus is more shallow than the left",
       "Spring test is negative",
       "Lumbar lordosis is increased",
@@ -3617,9 +3623,9 @@
       "Left ILA is more shallow than the right",
       "L5 F SRRR",
       "Sphinx test is positive",
-      "Right ILA is deep/anterior",
       "Lumbar lordosis is decreased",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -3814,7 +3820,8 @@
       "Lumbar lordosis is decreased",
       "Seated flexion test is positive on the left",
       "Right ILA is more shallow than the left",
-      "Sphinx test is positive"
+      "Sphinx test is positive",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -3933,7 +3940,8 @@
       "Left ILA is more shallow than the right",
       "Spring test is positive",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -4013,8 +4021,8 @@
       "Left ILA is more shallow than the right",
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
-      "Right ILA is deep/anterior",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -4212,7 +4220,8 @@
       "Sphinx test is positive",
       "Seated flexion test is positive on the right",
       "Lumbar lordosis is decreased",
-      "Spring test is positive"
+      "Spring test is positive",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -4643,7 +4652,8 @@
       "Seated flexion test is positive on the left",
       "Sphinx test is negative",
       "Spring test is negative",
-      "Right ILA is deeper than the left"
+      "Right ILA is deeper than the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -5466,7 +5476,8 @@
     "findings": [
       "Right ILA is more shallow than the left",
       "Spring test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -6054,7 +6065,8 @@
       "Seated flexion test is positive on the left",
       "Lumbar lordosis is decreased",
       "L5 F SRRR",
-      "Left ILA is more shallow than the right"
+      "Left ILA is more shallow than the right",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -6557,7 +6569,8 @@
     "findings": [
       "Seated flexion test is positive on the right",
       "Right ILA is deeper than the left",
-      "L5 N SLRR"
+      "L5 N SLRR",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -6754,7 +6767,8 @@
       "Seated flexion test is positive on the left",
       "Spring test is positive",
       "Right ILA is more shallow than the left",
-      "Lumbar lordosis is decreased"
+      "Lumbar lordosis is decreased",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -6988,8 +7002,8 @@
       "L5 F SRRR",
       "Lumbar lordosis is decreased",
       "Left ILA is more shallow than the right",
-      "Right ILA is deep/anterior",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -7227,7 +7241,8 @@
       "Lumbar lordosis is increased",
       "Right ILA is deeper than the left",
       "Sphinx test is negative",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -7659,10 +7674,10 @@
     "vignette": "A 25-year-old man presents with low back stiffness. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Left ILA is deeper than the right",
-      "Right ILA is shallow/posterior",
       "Sphinx test is negative",
       "Spring test is negative",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -7740,7 +7755,8 @@
       "Sphinx test is negative",
       "Spring test is negative",
       "Right ILA is deeper than the left",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -7779,9 +7795,9 @@
       "Lumbar lordosis is decreased",
       "Left ILA is more shallow than the right",
       "Sphinx test is positive",
-      "Right ILA is deep/anterior",
       "Spring test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -8169,9 +8185,9 @@
     "vignette": "A 61-year-old woman presents with radiating pain near the gluteal region. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Left ILA is more shallow than the right",
-      "Right ILA is deep/anterior",
       "Spring test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -8448,7 +8464,8 @@
       "L5 N SRRL",
       "Left ILA is deeper than the right",
       "Lumbar lordosis is increased",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -8762,9 +8779,9 @@
       "Lumbar lordosis is decreased",
       "Left ILA is more shallow than the right",
       "Sphinx test is positive",
-      "Right ILA is deep/anterior",
       "Spring test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -8998,7 +9015,6 @@
     "diagnosis": "Right on Right Sacral Torsion",
     "vignette": "A 52-year-old woman presents with pelvic discomfort. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Right ILA is shallow/posterior",
       "Spring test is negative",
       "Right sacral sulcus is more shallow than the left",
       "Left ILA is deeper than the right",
@@ -9083,7 +9099,8 @@
       "Seated flexion test is positive on the left",
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Sphinx test is negative"
+      "Sphinx test is negative",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -9596,7 +9613,8 @@
       "Lumbar lordosis is decreased",
       "L5 F SLRL",
       "Left ILA is deep/anterior",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -9865,7 +9883,8 @@
       "Lumbar lordosis is increased",
       "Left ILA is deeper than the right",
       "L5 N SRRL",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -10137,7 +10156,8 @@
       "Left ILA is more shallow than the right",
       "Spring test is positive",
       "L5 F SRRR",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -10570,7 +10590,8 @@
       "Spring test is positive",
       "Sphinx test is positive",
       "Left ILA is more shallow than the right",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -10844,10 +10865,10 @@
     "findings": [
       "Sphinx test is positive",
       "Lumbar lordosis is decreased",
-      "Left ILA is deep/anterior",
       "Right ILA is more shallow than the left",
       "Spring test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -10965,8 +10986,8 @@
     "findings": [
       "Sphinx test is positive",
       "Right ILA is more shallow than the left",
-      "Left ILA is deep/anterior",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -11239,7 +11260,8 @@
       "Lumbar lordosis is decreased",
       "Right ILA is more shallow than the left",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -11277,7 +11299,6 @@
     "findings": [
       "Left sacral sulcus is more shallow than the right",
       "Left ILA is deeper than the right",
-      "Right ILA is shallow/posterior",
       "Spring test is negative",
       "Seated flexion test is positive on the right"
     ],
@@ -11397,8 +11418,8 @@
     "findings": [
       "Spring test is negative",
       "Lumbar lordosis is increased",
-      "Left ILA is shallow/posterior",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -11437,8 +11458,8 @@
       "Spring test is negative",
       "Right ILA is deeper than the left",
       "Sphinx test is negative",
-      "Left ILA is shallow/posterior",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -12066,7 +12087,8 @@
       "Right ILA is more shallow than the left",
       "L5 F SLRL",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -12806,11 +12828,11 @@
     "vignette": "A 43-year-old man presents with low back stiffness. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Lumbar lordosis is increased",
-      "Left ILA is shallow/posterior",
       "Right ILA is deeper than the left",
       "Spring test is negative",
       "Sphinx test is negative",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -13044,7 +13066,6 @@
       "Lumbar lordosis is increased",
       "Spring test is negative",
       "Right sacral sulcus is more shallow than the left",
-      "Right ILA is shallow/posterior",
       "L5 N SRRL",
       "Seated flexion test is positive on the left"
     ],
@@ -13085,7 +13106,8 @@
       "Spring test is positive",
       "Seated flexion test is positive on the right",
       "Sphinx test is positive",
-      "Left ILA is more shallow than the right"
+      "Left ILA is more shallow than the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -13558,11 +13580,11 @@
     "vignette": "A 64-year-old man presents with low back stiffness. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "L5 N SLRR",
-      "Left ILA is shallow/posterior",
       "Right ILA is deeper than the left",
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -13600,7 +13622,6 @@
     "findings": [
       "Sphinx test is negative",
       "L5 N SRRL",
-      "Right ILA is shallow/posterior",
       "Lumbar lordosis is increased",
       "Right sacral sulcus is more shallow than the left",
       "Seated flexion test is positive on the left"
@@ -14075,12 +14096,12 @@
     "diagnosis": "Right on Left Sacral Torsion",
     "vignette": "A 33-year-old man presents with sacroiliac pain. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Left ILA is deep/anterior",
       "Lumbar lordosis is decreased",
       "Spring test is positive",
       "Sphinx test is positive",
       "Right ILA is more shallow than the left",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -14711,7 +14732,8 @@
       "L5 F SLRL",
       "Spring test is positive",
       "Seated flexion test is positive on the right",
-      "Right ILA is more shallow than the left"
+      "Right ILA is more shallow than the left",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -14947,7 +14969,8 @@
       "Spring test is positive",
       "Right ILA is deep/anterior",
       "Lumbar lordosis is decreased",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -14986,7 +15009,8 @@
       "L5 N SLRR",
       "Right ILA is deeper than the left",
       "Sphinx test is negative",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -15144,7 +15168,8 @@
       "Spring test is negative",
       "Right ILA is deeper than the left",
       "Sphinx test is negative",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -15183,7 +15208,8 @@
       "Sphinx test is positive",
       "Spring test is positive",
       "Right ILA is deep/anterior",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -16323,7 +16349,8 @@
       "Sphinx test is positive",
       "Left ILA is more shallow than the right",
       "Spring test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -16599,7 +16626,8 @@
       "Spring test is positive",
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -17349,7 +17377,8 @@
       "Lumbar lordosis is decreased",
       "Spring test is positive",
       "Left ILA is more shallow than the right",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -17387,7 +17416,6 @@
     "findings": [
       "L5 N SRRL",
       "Spring test is negative",
-      "Right ILA is shallow/posterior",
       "Right sacral sulcus is more shallow than the left",
       "Seated flexion test is positive on the left"
     ],
@@ -17857,11 +17885,11 @@
     "vignette": "A 55-year-old woman presents with low back stiffness. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Left ILA is more shallow than the right",
-      "Right ILA is deep/anterior",
       "Spring test is positive",
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -18091,11 +18119,11 @@
     "vignette": "A 38-year-old man presents with radiating pain near the gluteal region. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "L5 F SLRL",
-      "Left ILA is deep/anterior",
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
       "Right ILA is more shallow than the left",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -18213,7 +18241,8 @@
       "Seated flexion test is positive on the right",
       "Right ILA is more shallow than the left",
       "Sphinx test is positive",
-      "Lumbar lordosis is decreased"
+      "Lumbar lordosis is decreased",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -18483,9 +18512,9 @@
     "findings": [
       "Sphinx test is negative",
       "Spring test is negative",
-      "Right ILA is shallow/posterior",
       "Left ILA is deeper than the right",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -18719,8 +18748,8 @@
     "findings": [
       "L5 N SRRL",
       "Left ILA is deeper than the right",
-      "Right ILA is shallow/posterior",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -18799,9 +18828,9 @@
       "Right ILA is more shallow than the left",
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
-      "Left ILA is deep/anterior",
       "Spring test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -18996,7 +19025,6 @@
       "Right ILA is deeper than the left",
       "Left sacral sulcus is more shallow than the right",
       "Sphinx test is negative",
-      "Left ILA is shallow/posterior",
       "L5 N SLRR",
       "Seated flexion test is positive on the right"
     ],
@@ -19699,7 +19727,8 @@
     "findings": [
       "Seated flexion test is positive on the right",
       "Sphinx test is negative",
-      "Left ILA is deeper than the right"
+      "Left ILA is deeper than the right",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -19816,7 +19845,8 @@
       "Lumbar lordosis is increased",
       "Seated flexion test is positive on the right",
       "Left ILA is deeper than the right",
-      "Spring test is negative"
+      "Spring test is negative",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -20087,9 +20117,9 @@
       "Lumbar lordosis is decreased",
       "Spring test is positive",
       "Left ILA is more shallow than the right",
-      "Right ILA is deep/anterior",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -20598,10 +20628,10 @@
     "vignette": "A 67-year-old woman presents with sacroiliac pain. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Right ILA is more shallow than the left",
-      "Left ILA is deep/anterior",
       "L5 F SLRL",
       "Lumbar lordosis is decreased",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -20720,7 +20750,6 @@
       "Right ILA is deeper than the left",
       "Left sacral sulcus is more shallow than the right",
       "Spring test is negative",
-      "Left ILA is shallow/posterior",
       "Seated flexion test is positive on the right"
     ],
     "options": [
@@ -20875,7 +20904,6 @@
     "diagnosis": "Left on Left Sacral Torsion",
     "vignette": "A 69-year-old woman presents with radiating pain near the gluteal region. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Left ILA is shallow/posterior",
       "Lumbar lordosis is increased",
       "Sphinx test is negative",
       "Left sacral sulcus is more shallow than the right",
@@ -21193,9 +21221,9 @@
     "findings": [
       "Right ILA is deeper than the left",
       "Lumbar lordosis is increased",
-      "Left ILA is shallow/posterior",
       "L5 N SLRR",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -21506,12 +21534,12 @@
     "diagnosis": "Left Unilateral Sacral Flexion",
     "vignette": "A 28-year-old woman presents with sacroiliac pain. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Left ILA is shallow/posterior",
       "Lumbar lordosis is increased",
       "Sphinx test is negative",
       "Spring test is negative",
       "Right ILA is deeper than the left",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -21551,7 +21579,8 @@
       "Seated flexion test is positive on the left",
       "Right ILA is deeper than the left",
       "Sphinx test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -21742,7 +21771,6 @@
     "diagnosis": "Right Unilateral Sacral Extension",
     "vignette": "A 69-year-old man presents with pelvic discomfort. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Right ILA is deep/anterior",
       "Sphinx test is positive",
       "Left sacral sulcus is deeper than the right",
       "Left ILA is more shallow than the right",
@@ -21824,7 +21852,6 @@
       "Sphinx test is negative",
       "Left ILA is deeper than the right",
       "Spring test is negative",
-      "Right ILA is shallow/posterior",
       "Left sacral sulcus is more shallow than the right",
       "Seated flexion test is positive on the right"
     ],
@@ -21865,8 +21892,8 @@
       "Sphinx test is positive",
       "L5 F SRRR",
       "Left ILA is more shallow than the right",
-      "Right ILA is deep/anterior",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -22099,7 +22126,6 @@
       "L5 F SRRR",
       "Right sacral sulcus is deeper than the left",
       "Spring test is positive",
-      "Right ILA is deep/anterior",
       "Left ILA is more shallow than the right",
       "Seated flexion test is positive on the left"
     ],
@@ -22260,8 +22286,8 @@
     "findings": [
       "L5 N SRRL",
       "Spring test is negative",
-      "Right ILA is shallow/posterior",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -22495,7 +22521,8 @@
       "Spring test is positive",
       "Right ILA is more shallow than the left",
       "Lumbar lordosis is decreased",
-      "Sphinx test is positive"
+      "Sphinx test is positive",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -22690,11 +22717,11 @@
     "diagnosis": "Left on Left Sacral Torsion",
     "vignette": "A 31-year-old woman presents with stiffness after physical activity. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Left ILA is shallow/posterior",
       "Spring test is negative",
       "Lumbar lordosis is increased",
       "Right ILA is deeper than the left",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -23085,7 +23112,8 @@
       "Sphinx test is negative",
       "Seated flexion test is positive on the left",
       "Spring test is negative",
-      "Right ILA is deeper than the left"
+      "Right ILA is deeper than the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -23123,10 +23151,10 @@
     "findings": [
       "Sphinx test is positive",
       "Lumbar lordosis is decreased",
-      "Right ILA is deep/anterior",
       "L5 F SRRR",
       "Left ILA is more shallow than the right",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -23166,7 +23194,8 @@
       "Seated flexion test is positive on the right",
       "L5 N SLRR",
       "Lumbar lordosis is increased",
-      "Spring test is negative"
+      "Spring test is negative",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -23521,10 +23550,10 @@
     "findings": [
       "Sphinx test is positive",
       "Left ILA is more shallow than the right",
-      "Right ILA is deep/anterior",
       "Lumbar lordosis is decreased",
       "L5 F SRRR",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -24819,7 +24848,6 @@
     "vignette": "A 25-year-old woman presents with pain with trunk rotation. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Spring test is negative",
-      "Right ILA is shallow/posterior",
       "Right sacral sulcus is more shallow than the left",
       "Sphinx test is negative",
       "Seated flexion test is positive on the left"
@@ -25322,7 +25350,6 @@
     "vignette": "A 46-year-old man presents with pain that worsens with prolonged sitting. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Right ILA is more shallow than the left",
-      "Left ILA is deep/anterior",
       "Spring test is positive",
       "Right sacral sulcus is deeper than the left",
       "Sphinx test is positive",
@@ -25681,11 +25708,11 @@
     "diagnosis": "Left on Right Sacral Torsion",
     "vignette": "A 54-year-old woman presents with pain while standing from a chair. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Right ILA is deep/anterior",
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
       "Left ILA is more shallow than the right",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -25762,7 +25789,6 @@
     "diagnosis": "Right Unilateral Sacral Extension",
     "vignette": "A 56-year-old man presents with sacroiliac pain. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Right ILA is deep/anterior",
       "Sphinx test is positive",
       "Left sacral sulcus is deeper than the right",
       "Left ILA is more shallow than the right",
@@ -26081,7 +26107,6 @@
     "findings": [
       "Sphinx test is negative",
       "Left ILA is deeper than the right",
-      "Right ILA is shallow/posterior",
       "Left sacral sulcus is more shallow than the right",
       "Spring test is negative",
       "Seated flexion test is positive on the right"
@@ -26163,8 +26188,8 @@
       "Sphinx test is negative",
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Left ILA is shallow/posterior",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -26317,8 +26342,8 @@
     "findings": [
       "L5 N SRRL",
       "Lumbar lordosis is increased",
-      "Right ILA is shallow/posterior",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -26434,10 +26459,10 @@
     "vignette": "A 30-year-old man presents with stiffness after physical activity. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Sphinx test is negative",
-      "Right ILA is shallow/posterior",
       "Left ILA is deeper than the right",
       "Spring test is negative",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -26555,7 +26580,8 @@
     "findings": [
       "Left ILA is deeper than the right",
       "Seated flexion test is positive on the left",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -26786,7 +26812,8 @@
       "Left ILA is more shallow than the right",
       "Seated flexion test is positive on the right",
       "Sphinx test is positive",
-      "Spring test is positive"
+      "Spring test is positive",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -26862,7 +26889,6 @@
     "vignette": "A 34-year-old man presents with pain that worsens with prolonged sitting. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Right ILA is deeper than the left",
-      "Left ILA is shallow/posterior",
       "L5 N SLRR",
       "Left sacral sulcus is more shallow than the right",
       "Sphinx test is negative",
@@ -27253,7 +27279,8 @@
       "Spring test is negative",
       "Left ILA is deeper than the right",
       "Sphinx test is negative",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -27446,7 +27473,6 @@
     "findings": [
       "Spring test is positive",
       "Left sacral sulcus is deeper than the right",
-      "Left ILA is deep/anterior",
       "Right ILA is more shallow than the left",
       "Sphinx test is positive",
       "Seated flexion test is positive on the right"
@@ -27489,7 +27515,8 @@
       "Lumbar lordosis is decreased",
       "L5 F SLRL",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -27566,7 +27593,6 @@
     "findings": [
       "Spring test is negative",
       "Sphinx test is negative",
-      "Right ILA is shallow/posterior",
       "Left ILA is deeper than the right",
       "Right sacral sulcus is more shallow than the left",
       "Seated flexion test is positive on the left"
@@ -27609,7 +27635,8 @@
       "Seated flexion test is positive on the right",
       "Right ILA is more shallow than the left",
       "L5 F SLRL",
-      "Spring test is positive"
+      "Spring test is positive",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -27806,7 +27833,8 @@
       "Lumbar lordosis is decreased",
       "Left ILA is more shallow than the right",
       "Sphinx test is positive",
-      "L5 F SRRR"
+      "L5 F SRRR",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -27922,9 +27950,9 @@
     "findings": [
       "Left ILA is more shallow than the right",
       "L5 F SRRR",
-      "Right ILA is deep/anterior",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -27963,9 +27991,9 @@
       "Spring test is positive",
       "Right ILA is more shallow than the left",
       "L5 F SLRL",
-      "Left ILA is deep/anterior",
       "Lumbar lordosis is decreased",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -28084,7 +28112,8 @@
       "Left ILA is more shallow than the right",
       "Lumbar lordosis is decreased",
       "Spring test is positive",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -28124,7 +28153,8 @@
       "Lumbar lordosis is decreased",
       "Spring test is positive",
       "Sphinx test is positive",
-      "Left ILA is more shallow than the right"
+      "Left ILA is more shallow than the right",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -28436,9 +28466,9 @@
     "vignette": "A 66-year-old woman presents with pain that worsens with prolonged sitting. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "L5 N SRRL",
-      "Right ILA is shallow/posterior",
       "Lumbar lordosis is increased",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -28984,7 +29014,6 @@
       "Left sacral sulcus is more shallow than the right",
       "Sphinx test is negative",
       "Spring test is negative",
-      "Right ILA is shallow/posterior",
       "Seated flexion test is positive on the right"
     ],
     "options": [
@@ -29179,9 +29208,9 @@
     "findings": [
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Left ILA is shallow/posterior",
       "Right ILA is deeper than the left",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -29221,7 +29250,8 @@
       "Lumbar lordosis is increased",
       "Sphinx test is negative",
       "Right ILA is deeper than the left",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -29612,7 +29642,8 @@
       "L5 N SLRR",
       "Right ILA is deeper than the left",
       "Lumbar lordosis is increased",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -30389,10 +30420,10 @@
     "vignette": "A 18-year-old man presents with sacroiliac pain. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Lumbar lordosis is increased",
-      "Left ILA is shallow/posterior",
       "Right ILA is deeper than the left",
       "L5 N SLRR",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -31090,11 +31121,11 @@
     "diagnosis": "Right on Right Sacral Torsion",
     "vignette": "A 30-year-old woman presents with pain that worsens with prolonged sitting. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Right ILA is shallow/posterior",
       "Lumbar lordosis is increased",
       "L5 N SRRL",
       "Sphinx test is negative",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -31761,10 +31792,10 @@
     "findings": [
       "Right ILA is more shallow than the left",
       "Spring test is positive",
-      "Left ILA is deep/anterior",
       "Lumbar lordosis is decreased",
       "L5 F SLRL",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -32983,7 +33014,8 @@
       "Left ILA is more shallow than the right",
       "Lumbar lordosis is decreased",
       "Spring test is positive",
-      "Sphinx test is positive"
+      "Sphinx test is positive",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -33178,7 +33210,8 @@
       "L5 N SLRR",
       "Seated flexion test is positive on the right",
       "Right ILA is deeper than the left",
-      "Spring test is negative"
+      "Spring test is negative",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -33489,7 +33522,8 @@
     "findings": [
       "Seated flexion test is positive on the left",
       "Sphinx test is positive",
-      "Left ILA is more shallow than the right"
+      "Left ILA is more shallow than the right",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -33767,8 +33801,8 @@
       "Left ILA is deeper than the right",
       "Spring test is negative",
       "Lumbar lordosis is increased",
-      "Right ILA is shallow/posterior",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -33884,7 +33918,8 @@
       "Seated flexion test is positive on the right",
       "Sphinx test is positive",
       "Spring test is positive",
-      "Left ILA is more shallow than the right"
+      "Left ILA is more shallow than the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -34588,7 +34623,8 @@
       "Lumbar lordosis is increased",
       "Right ILA is deeper than the left",
       "Sphinx test is negative",
-      "Spring test is negative"
+      "Spring test is negative",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -35137,9 +35173,9 @@
       "Sphinx test is negative",
       "Right ILA is deeper than the left",
       "L5 N SLRR",
-      "Left ILA is shallow/posterior",
       "Lumbar lordosis is increased",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -35411,10 +35447,10 @@
     "findings": [
       "Left ILA is more shallow than the right",
       "L5 F SRRR",
-      "Right ILA is deep/anterior",
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -35611,7 +35647,8 @@
       "Right ILA is more shallow than the left",
       "Lumbar lordosis is decreased",
       "Spring test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -35732,7 +35769,8 @@
       "Spring test is negative",
       "Lumbar lordosis is increased",
       "Right ILA is deeper than the left",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -35891,7 +35929,8 @@
       "Seated flexion test is positive on the right",
       "Right ILA is deeper than the left",
       "Sphinx test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -35967,10 +36006,10 @@
     "findings": [
       "L5 F SLRL",
       "Sphinx test is positive",
-      "Left ILA is deep/anterior",
       "Right ILA is more shallow than the left",
       "Lumbar lordosis is decreased",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -36049,7 +36088,8 @@
       "Sphinx test is negative",
       "Lumbar lordosis is increased",
       "Left ILA is deeper than the right",
-      "Seated flexion test is positive on the right"
+      "Seated flexion test is positive on the right",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -36554,7 +36594,6 @@
     "diagnosis": "Left Unilateral Sacral Flexion",
     "vignette": "A 44-year-old man presents with pain that worsens with prolonged sitting. Osteopathic structural examination reveals the following findings.",
     "findings": [
-      "Left ILA is shallow/posterior",
       "Spring test is negative",
       "Sphinx test is negative",
       "Right sacral sulcus is more shallow than the left",
@@ -36992,7 +37031,8 @@
       "Left ILA is deeper than the right",
       "Seated flexion test is positive on the left",
       "L5 N SRRL",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -37185,7 +37225,6 @@
     "vignette": "A 25-year-old man presents with pain with trunk rotation. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Spring test is positive",
-      "Right ILA is deep/anterior",
       "Left sacral sulcus is deeper than the right",
       "Sphinx test is positive",
       "Left ILA is more shallow than the right",
@@ -37228,7 +37267,8 @@
       "Spring test is positive",
       "Left ILA is more shallow than the right",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -37345,7 +37385,8 @@
       "Left ILA is more shallow than the right",
       "L5 F SRRR",
       "Sphinx test is positive",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Left sacral sulcus is shallow/posterior"
     ],
     "options": [
       {
@@ -37424,7 +37465,8 @@
       "Lumbar lordosis is increased",
       "Right ILA is deeper than the left",
       "Spring test is negative",
-      "Sphinx test is negative"
+      "Sphinx test is negative",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -37935,7 +37977,8 @@
       "L5 N SLRR",
       "Right ILA is deeper than the left",
       "Seated flexion test is positive on the right",
-      "Sphinx test is negative"
+      "Sphinx test is negative",
+      "Left sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -38129,7 +38172,8 @@
     "findings": [
       "Left ILA is deeper than the right",
       "Seated flexion test is positive on the right",
-      "Spring test is negative"
+      "Spring test is negative",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
@@ -38518,7 +38562,8 @@
       "Spring test is negative",
       "Left ILA is deeper than the right",
       "Sphinx test is negative",
-      "Seated flexion test is positive on the left"
+      "Seated flexion test is positive on the left",
+      "Right sacral sulcus is deep/anterior"
     ],
     "options": [
       {
