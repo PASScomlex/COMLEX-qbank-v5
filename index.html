@@ -13,9 +13,9 @@
             display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
   .brand { font-size:1.05rem; font-weight:700; letter-spacing:.2px; }
   .logo-btn { display:flex; align-items:center; border:none; background:transparent; padding:0; margin:0; position:relative; z-index:2; }
-  /* Bigger logo */
   #pass-logo { height:52px; width:auto; cursor:pointer; outline:none; object-fit:contain; }
   #pass-logo:focus-visible { box-shadow:0 0 0 3px rgba(214,158,46,.45); border-radius:4px; }
+
   .controls-inline > * { margin-right:8px; }
   .btn { padding:10px 16px; border:none; border-radius:8px; cursor:pointer; color:#fff; background:var(--pass-navy); }
   .btn.secondary { background:#6b7280; }
@@ -23,6 +23,7 @@
   .btn:hover { filter:brightness(0.95); }
   input[type=number] { width:110px; padding:8px; border:1px solid #d1d5db; border-radius:6px; }
   input[type=file] { color:#fff; }
+
   .container { max-width:980px; margin:24px auto; background:var(--card); border-radius:10px;
                box-shadow:0 6px 18px rgba(0,0,0,0.08); padding:22px; }
   .qid { color:var(--muted); font-weight:600; margin-bottom:4px; }
@@ -30,18 +31,23 @@
   .vignette { background:#f7fafc; border-left:5px solid var(--pass-gold); padding:12px; margin-bottom:10px; }
   .findings-title { font-weight:700; margin:10px 0 6px; color:#0f172a; }
   ul.findings { margin:0 0 12px 20px; }
-  .option { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; margin:8px 0;
-            border:1px solid #e5e7eb; border-radius:8px; background:#fafafa; cursor:pointer; }
+
+  /* Answer option + inline rationale */
+  .option { display:block; padding:12px 14px; margin:10px 0;
+            border:1px solid #e5e7eb; border-radius:10px; background:#fafafa; cursor:pointer; transition:border-color .15s, background .15s; }
+  .option .row-top{ display:flex; align-items:flex-start; gap:10px; }
   .option input[type=radio] { margin-top:2px; }
+  .option .text { flex:1; }
   .option .strike-btn { margin-left:auto; font-size:0.85rem; background:#f3f4f6; border:1px solid #d1d5db;
                         border-radius:6px; padding:4px 8px; cursor:pointer; }
+  .option .rationale { display:none; margin-top:10px; padding:10px; border-radius:8px; background:#f9fafb; border:1px solid #e5e7eb; line-height:1.45; }
+  .option.show-rationale .rationale{ display:block; }
+  .option.opt-correct{ border-color:#059669; background:#ecfdf5; }
+  .option.opt-incorrect{ border-color:#b91c1c; background:#fef2f2; }
+  .option.opt-neutral{}
+
   .struck { text-decoration:line-through; color:#6b7280; }
-  .exp-panel{display:none;margin-top:8px;border:1px solid #e5e7eb;border-radius:8px;background:#f9fafb;}
-  .exp-head{padding:8px 10px;font-weight:600;border-bottom:1px solid #e5e7eb;}
-  .exp-body{padding:10px 12px;line-height:1.4;}
-  .exp-correct .exp-head{background:#ecfdf5;color:#06603b;}
-  .exp-incorrect .exp-head{background:#fef2f2;color:#7f1d1d;}
-  .exp-neutral .exp-head{background:#f3f4f6;color:#374151;}
+
   .reveal-controls{display:none;margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;}
   .btn-outline{background:#fff;color:#111827;border:1px solid #d1d5db;}
   .btn-outline:hover{background:#f3f4f6;}
@@ -51,9 +57,10 @@
   .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   textarea, input[type=text], input[type=password] { width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-family:inherit; }
   label.small { font-size:0.85rem; color:#374151; }
+
   .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; }
   .modal { position:fixed; top:8%; left:50%; transform:translateX(-50%);
-    width:min(720px, 92vw); max-height:80vh; overflow:auto; background:#fff; border-radius:10px;
+    width:min(760px, 92vw); max-height:80vh; overflow:auto; background:#fff; border-radius:10px;
     box-shadow:0 12px 24px rgba(0,0,0,0.25); padding:16px; z-index:1000; display:none; }
   .modal h3 { margin-top:0; }
   .muted { color:#6b7280; font-size:0.85rem; }
@@ -78,7 +85,7 @@
         <button class="btn outline" onclick="openComment()">Comment</button>
       </div>
 
-      <!-- Logo (auto-resolves if moved) -->
+      <!-- Logo (auto-finds PASS Logo.png if present) -->
       <button id="logoBtn" class="logo-btn" type="button" aria-label="Open admin login"
               onclick="openAdminLogin();" onkeydown="if(event.key==='Enter'||event.key===' '){openAdminLogin(); event.preventDefault();}">
         <img id="pass-logo" src="PASS%20Logo.png" alt="PASS Program logo" onclick="openAdminLogin();" />
@@ -89,7 +96,8 @@
         <button class="btn" onclick="importQuestions()">Import</button>
         <button class="btn secondary" onclick="toggleEditor()">Edit</button>
         <button class="btn secondary" onclick="showLog()">Track Changes</button>
-        <button class="btn" onclick="saveHTML()">Save (embed)</button>
+        <button class="btn" onclick="openGHSourceSave()">Save edits to source files</button>
+        <button class="btn outline" onclick="saveHTML()">Save (embed)</button>
         <button class="btn outline" onclick="closeAdminTools()">Close Tools</button>
       </div>
     </div>
@@ -150,8 +158,10 @@
     </div>
   </div>
 
+  <!-- Backdrop shared by modals -->
   <div class="modal-backdrop" id="backdrop"></div>
 
+  <!-- Admin login modal -->
   <div class="modal" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-title">
     <h3 id="admin-title">Administrator Tools</h3>
     <div class="muted">Enter password to unlock: <strong>Import / Edit / Track / Save</strong></div>
@@ -166,6 +176,7 @@
     <div class="small-note" id="admin-msg" style="margin-top:6px; color:#b91c1c;"></div>
   </div>
 
+  <!-- Track changes modal -->
   <div class="modal" id="logModal" role="dialog" aria-modal="true" aria-labelledby="log-title">
     <h3 id="log-title">Change Log</h3>
     <div id="logBody" class="small-note">No changes yet.</div>
@@ -175,6 +186,36 @@
     </div>
   </div>
 
+  <!-- Save to original source files modal -->
+  <div class="modal" id="gh-modal" role="dialog" aria-modal="true" aria-labelledby="gh-title">
+    <h3 id="gh-title">Save edits to original JSON files</h3>
+    <div class="small-note" id="gh-summary" style="margin-bottom:8px;"></div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="small">GitHub owner</label>
+        <input type="text" id="gh-owner" placeholder="org-or-user" />
+      </div>
+      <div class="field">
+        <label class="small">Repo</label>
+        <input type="text" id="gh-repo" placeholder="repository" />
+      </div>
+    </div>
+    <div class="field">
+      <label class="small">Commit message</label>
+      <input type="text" id="gh-message" placeholder="Update questions via PASS editor" />
+    </div>
+    <div class="field">
+      <label class="small">GitHub token (repo scope)</label>
+      <input type="password" id="gh-token" placeholder="ghp_..." />
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn" onclick="saveDirtyBackToSources()">Save all edits</button>
+      <button class="btn secondary" onclick="closeGH()">Cancel</button>
+    </div>
+    <div id="gh-msg" class="small-note" style="margin-top:6px;"></div>
+  </div>
+
+  <!-- Comment modal -->
   <div class="modal" id="comment-modal" role="dialog" aria-modal="true" aria-labelledby="comment-title">
     <h3 id="comment-title">Submit a Comment</h3>
     <div class="muted" style="margin-bottom:8px;">Your feedback goes to <strong>OMMtutor@passprogram.net</strong></div>
@@ -193,7 +234,7 @@
     <div class="small-note" style="margin-top:6px;">
       We include metadata with your comment: Question ID, current selection, time on question, and browser info.
     </div>
-    <div class="row" style="margin-top:10px%;">
+    <div class="row" style="margin-top:10px;">
       <button class="btn" onclick="sendComment()">Send Email</button>
       <button class="btn secondary" onclick="copyComment()">Copy to clipboard</button>
       <button class="btn outline" onclick="saveCommentCSV()">Save comments (.csv)</button>
@@ -221,8 +262,10 @@
     window.__reviewQueue = [];
     window.__reviewPtr = 0;
     window.__adminUnlocked = false;
-    window.__commentLog = [];
 
+    // Track file shapes so we can write back with the same shape
+    // key: fileKey "owner/repo@branch:path"
+    window.__fileShapes = {};  // {shape:'array'|'object-questions'}
     const $ = (id) => document.getElementById(id);
     const log = (...a)=>console.log('[QBANK]',...a);
 
@@ -256,13 +299,7 @@
           }
         }catch(_){}
       }
-      img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="52">
-           <rect width="100%" height="100%" fill="#0A1E3A"/>
-           <text x="10" y="34" font-family="Segoe UI,Arial" font-size="22" fill="#ffffff">PASS Program</text>
-         </svg>`);
     }
-    /* --------------- END LOGO AUTODETECT --------------- */
 
     function escapeHTML(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
     function normID(v, i){ const n = parseInt(v,10); return isFinite(n) ? ("Q"+String(n).padStart(4,"0")) : ("Q"+String(i+1).padStart(4,"0")); }
@@ -302,13 +339,15 @@
         el.addEventListener('mouseup', clear); el.addEventListener('mouseleave', clear); el.addEventListener('touchend', clear); }
     }
 
-    /* ---------- question data normalization, import, and autoload ---------- */
+    /* ---------- normalization & parsing ---------- */
     function pickFields(obj, keys){ for(const k of keys){ if(obj && obj[k]!=null) return obj[k]; } return undefined; }
+
     function collectFindings(q){
       if (Array.isArray(q.findings)) return q.findings.map(x=>String(x).trim()).filter(Boolean);
       const keys = ['Finding 1','Finding 2','Finding 3','Finding 4','Finding 5','Finding 6','finding1','finding2','finding3','finding4','finding5','finding6'];
       const out=[]; for(const k of keys){ if(q[k]) out.push(String(q[k]).trim()); } return out.filter(Boolean);
     }
+
     function extractOptionsAndRationales(q){
       if (Array.isArray(q.options) && q.options.length){
         if (typeof q.options[0] === 'object'){
@@ -319,11 +358,6 @@
           const opts = q.options.map(s=>String(s||'').trim()).slice(0,5);
           let rats = [];
           if (Array.isArray(q.rationales)) rats = q.rationales.map(r => (typeof r==='object' && r.rationale) ? String(r.rationale) : String(r||'')).slice(0,5);
-          else {
-            const rk = ['RA','RB','RC','RD','RE','ra','rb','rc','rd','re','Rationale 1','Rationale 2','Rationale 3','Rationale 4','Rationale 5'];
-            const tmp=[]; for (let i=0;i<5;i++){ const v = pickFields(q,[rk[i] ?? '']); if(v) tmp.push(String(v)); }
-            if (tmp.length) rats = tmp;
-          }
           return {options: opts, rationales: rats};
         }
       }
@@ -332,7 +366,8 @@
       const rats = letters.map(L => q['R'+L] ?? q['r'+L]).filter(Boolean).map(x=>String(x).trim());
       return {options: opts, rationales: rats};
     }
-    function normalizeQuestion(q, i){
+
+    function normalizeQuestion(q, i, meta){
       const {options, rationales} = extractOptionsAndRationales(q);
       let correctIndex = (typeof q.correctIndex === "number") ? q.correctIndex : -1;
       if(correctIndex<0){
@@ -347,72 +382,111 @@
       const findings = collectFindings(q);
       const vignette = String(q.vignette??q.stem??'').trim();
       const id = normID(pickFields(q,['id','ID','qid','Question ID']), i);
-      return { id, category: String(q.category??'').trim(), diagnosis:String(q.diagnosis??'').trim(), vignette, findings, options, rationales, correctIndex };
+      const norm = { id, category: String(q.category??'').trim(), diagnosis:String(q.diagnosis??'').trim(), vignette, findings, options, rationales, correctIndex };
+      if (meta){ norm.__src = meta; norm.__srcIndex = i; }
+      return norm;
     }
-    function normalizeArray(arr){ return arr.map((q,i)=>normalizeQuestion(q,i)); }
+    function normalizeArray(arr, meta){ return arr.map((q,i)=>normalizeQuestion(q,i,meta)); }
 
     function parseJsonOrJsArray(text){
       try{
         const data=JSON.parse(text);
-        if (Array.isArray(data)) return data;
-        if (data && Array.isArray(data.questions)) return data.questions;
+        if (Array.isArray(data)) return {arr:data, shape:'array'};
+        if (data && Array.isArray(data.questions)) return {arr:data.questions, shape:'object-questions'};
       }catch(_){}
       const m=text.match(/(?:window\.QUESTIONS\s*=\s*|const\s+\w+\s*=\s*)(\[[\s\S]*\]);?/);
-      if (m){ try { const arr=JSON.parse(m[1]); return arr; } catch(_){} }
+      if (m){ try { const arr=JSON.parse(m[1]); return {arr, shape:'array'}; } catch(_){} }
       return null;
     }
 
+    /* ---------- import / autoload ---------- */
     function importQuestions(){ if (!window.__adminUnlocked){ alert('Admin tools are locked. Click the PASS logo and enter the password.'); return; }
       const file = $('fileInput').files[0]; if(!file){ alert('Choose your updated_questions.json (or .js) first.'); return; }
       const reader = new FileReader();
-      reader.onload = (e)=>{ const text=e.target.result; const arr = parseJsonOrJsArray(text);
-        if (arr){ window.QUESTIONS = normalizeArray(arr); resetState(); render(); }
+      reader.onload = (e)=>{ const text=e.target.result; const parsed = parseJsonOrJsArray(text);
+        if (parsed){ const meta = deriveLocalMeta(file.name); window.QUESTIONS = normalizeArray(parsed.arr, meta); trackFileShape(meta, parsed.shape); resetState(); render(); }
         else alert('Could not parse file. Provide a JSON array or a JS file that assigns an array.');
       };
       reader.readAsText(file);
     }
 
-    async function tryFetchList(urls){
+    function deriveLocalMeta(pathGuess){
+      // Use page’s repo for writes; pick a probable branch
+      const info = detectRepoFromPageURL();
+      const branch = window.__pagesBranch || 'gh-pages';
+      return info ? {type:'github', owner:info.owner, repo:info.repo, branch, path:pathGuess} : {type:'unknown'};
+    }
+
+    async function tryFetchList(entries){
       const all = [];
-      for (const url of urls){
+      for (const ent of entries){
+        const item = (typeof ent === 'string') ? {href: ent} : ent;
         try{
-          const txt = await fetch(url, {cache:'no-cache'}).then(r=> r.ok ? r.text() : Promise.reject(new Error(r.status)));
-          const arr = parseJsonOrJsArray(txt);
-          if (arr && Array.isArray(arr)) all.push(...arr);
+          const txt = await fetch(item.href, {cache:'no-cache'}).then(r=> r.ok ? r.text() : Promise.reject(new Error(r.status)));
+          const parsed = parseJsonOrJsArray(txt);
+          if (!parsed) continue;
+          if (item.meta && item.meta.fileKey && parsed.shape) trackFileShape(item.meta, parsed.shape);
+          const meta = item.meta || null;
+          all.push({arr:parsed.arr, meta});
         }catch(_){}
       }
-      if (all.length){ mergeQuestions(normalizeArray(all)); toast(`Loaded ${all.length} items from ${urls.length} candidate file(s).`); }
+      for (const chunk of all){
+        mergeQuestions(normalizeArray(chunk.arr, chunk.meta));
+      }
+      if (all.length){ toast(`Loaded ${all.reduce((n,c)=>n+c.arr.length,0)} items from ${all.length} file(s).`); }
     }
 
     function detectRepoFromPageURL(){
-      const host = location.host, owner = host.split('.')[0];
+      const host = location.host; // e.g., passcomlex.github.io
+      const owner = host.split('.')[0];
       const pathParts = location.pathname.replace(/^\/+/,'').split('/');
       const repo = pathParts[0] || '';
       return owner && repo ? {owner, repo} : null;
     }
 
-    async function safeJson(url){
-      try{ const r = await fetch(url, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-cache'}); if (!r.ok) return null; return await r.json(); }
+    async function safeJson(url, headers={}){
+      try{ const r = await fetch(url, {headers, cache:'no-cache'}); if (!r.ok) return null; return await r.json(); }
       catch(_){ return null; }
+    }
+
+    function fileKeyFromMeta(meta){
+      if (!meta || meta.type!=='github') return null;
+      return `${meta.owner}/${meta.repo}@${meta.branch}:${meta.path}`;
+    }
+    function trackFileShape(meta, shape){
+      const key = fileKeyFromMeta(meta); if (!key || !shape) return;
+      window.__fileShapes[key] = {shape};
     }
 
     async function githubAPIScanAndLoad(){
       const info = detectRepoFromPageURL(); if (!info) return;
       const {owner, repo} = info;
       const apiBase = `https://api.github.com/repos/${owner}/${repo}`;
-      const meta = await safeJson(`${apiBase}`); const defaultBranch = meta?.default_branch || 'main';
-      let pagesBranch = null; try{ const pages = await safeJson(`${apiBase}/pages`); pagesBranch = pages?.source?.branch || null; }catch(_){}
-      let branches = [ 'gh-pages', pagesBranch, defaultBranch, 'main', 'master' ].filter(Boolean);
-      try{ const list = await safeJson(`${apiBase}/branches?per_page=100`); const names = Array.isArray(list) ? list.map(b=>b.name) : []; for (const n of names){ if(!branches.includes(n)) branches.push(n); } }catch(_){}
+      const meta = await safeJson(`${apiBase}`);
+      const defaultBranch = meta?.default_branch || 'main';
+      let pages = await safeJson(`${apiBase}/pages`);
+      window.__pagesBranch = pages?.source?.branch || null;
+
+      let branches = [ 'gh-pages', window.__pagesBranch, defaultBranch, 'main', 'master' ].filter(Boolean);
+      try{
+        const list = await safeJson(`${apiBase}/branches?per_page=100`);
+        const names = Array.isArray(list) ? list.map(b=>b.name) : [];
+        for (const n of names){ if(!branches.includes(n)) branches.push(n); }
+      }catch(_){}
+
       const dirs = ['', 'questions', 'data', 'json', 'assets', 'qbank'];
+
       for (const br of branches){
         for (const dir of dirs){
           const url = `${apiBase}/contents/${dir}?ref=${encodeURIComponent(br)}`;
           const arr = await safeJson(url);
           if (!Array.isArray(arr)) continue;
           const jsonLike = arr.filter(it => it && it.type==='file' && /\.(json|js)$/i.test(it.name) && !/index\.html?$/i.test(it.name));
-          const rawURLs = jsonLike.map(it => it.download_url).filter(Boolean);
-          await tryFetchList(rawURLs);
+          const entries = jsonLike.map(it => ({
+              href: it.download_url,
+              meta: {type:'github', owner, repo, branch: br, path: it.path, fileKey: `${owner}/${repo}@${br}:${it.path}`}
+          }));
+          await tryFetchList(entries);
         }
       }
     }
@@ -428,19 +502,29 @@
         const emb = $('embedded-questions');
         if(emb && emb.textContent.trim()){
           const data = JSON.parse(emb.textContent);
-          if(Array.isArray(data)) window.QUESTIONS = normalizeArray(data);
+          if(Array.isArray(data)) window.QUESTIONS = normalizeArray(data, null);
         }
       }catch(_){}
+      // Load from GitHub API first (best metadata for saving)
+      await githubAPIScanAndLoad();
+
+      // Also try common relative files in the site (assign guessed meta)
+      const info = detectRepoFromPageURL();
+      const branchGuess = window.__pagesBranch || 'gh-pages';
       const relFiles = [
         'questions.json','updated_questions.json','questions.js',
         'data/questions.json','data/updated_questions.json',
         'questions/questions.json','json/questions.json','assets/questions.json'
       ];
-      await tryFetchList(relFiles.map(p=> new URL(p, location.href).href));
-      try{ await githubAPIScanAndLoad(); }catch(_){}
+      const relEntries = relFiles.map(p=>{
+        const u = new URL(p, location.href).href;
+        const meta = info ? {type:'github', owner:info.owner, repo:info.repo, branch:branchGuess, path:p, fileKey:`${info.owner}/${info.repo}@${branchGuess}:${p}`} : null;
+        return {href:u, meta};
+      });
+      await tryFetchList(relEntries);
     }
-    /* ----------------------- end autoload ----------------------- */
 
+    /* ---------- rendering with inline rationales ---------- */
     function resetState(){ idx=0; window.__score={attempted:0,correct:0}; window.__missed=[]; window.__answered={}; window.__expOpen={}; window.__qStart=Date.now(); window.__timeSpent={}; window.__reviewMode=false; window.__reviewQueue=[]; window.__reviewPtr=0; }
 
     function optionHTML(q, i, selectedIndex){
@@ -448,14 +532,13 @@
       const opt=escapeHTML((q.options||[])[i]||'');
       const rat=escapeHTML((q.rationales||[])[i]||'');
       return `
-        <div class="option" data-idx="${i}" onclick="onOptionClick(${i})">
-          <input type="radio" name="ans" ${selectedIndex===i?'checked':''} ${selectedIndex>=0?'disabled':''}>
-          <div>${letters[i]}) ${opt}</div>
-          <button class="strike-btn" onclick="strike(${i}); event.stopPropagation();">Strike</button>
-        </div>
-        <div class="exp-panel exp-neutral" id="exp-${i}">
-          <div class="exp-head">Explanation</div>
-          <div class="exp-body">${rat || '—'}</div>
+        <div class="option" id="opt-${i}" data-idx="${i}" onclick="onOptionClick(${i})">
+          <div class="row-top">
+            <input type="radio" name="ans" ${selectedIndex===i?'checked':''} ${selectedIndex>=0?'disabled':''}>
+            <div class="text"><strong>${letters[i]})</strong> ${opt}</div>
+            <button class="strike-btn" onclick="strike(${i}); event.stopPropagation();">Strike</button>
+          </div>
+          <div class="rationale" id="rat-${i}">${rat || '—'}</div>
         </div>`;
     }
 
@@ -473,18 +556,22 @@
       $('findings').innerHTML = (q.findings||[]).map(f=>"<li>"+escapeHTML(f)+"</li>").join('');
       const selectedIndex = (window.__answered.hasOwnProperty(idx)? window.__answered[idx] : -1);
       $('options').innerHTML = (q.options||[]).map((_,i)=> optionHTML(q,i,selectedIndex)).join('');
+
       const openSet = getOpenSet(idx);
       (q.options||[]).forEach((_,i)=>{
-        const panel=$('exp-'+i); if(!panel) return;
-        panel.style.display = openSet.has(i)? 'block' : 'none';
-        panel.classList.remove('exp-correct','exp-incorrect','exp-neutral');
+        const box=$('opt-'+i); if(!box) return;
+        // rationale visibility
+        box.classList.toggle('show-rationale', openSet.has(i));
+        // correctness coloring if answered
+        box.classList.remove('opt-correct','opt-incorrect','opt-neutral');
         if (window.__answered.hasOwnProperty(idx)){
           const ci=q.correctIndex; const sel=window.__answered[idx];
-          if (i===ci) panel.classList.add('exp-correct');
-          else if (i===sel) panel.classList.add('exp-incorrect');
-          else panel.classList.add('exp-neutral');
-        } else panel.classList.add('exp-neutral');
+          if (i===ci) box.classList.add('opt-correct');
+          else if (i===sel) box.classList.add('opt-incorrect');
+          else box.classList.add('opt-neutral');
+        } else box.classList.add('opt-neutral');
       });
+
       const ctrl = $('reveal-controls'); ctrl.style.display = window.__answered.hasOwnProperty(idx)? 'flex':'none';
       $('btn-next-after').style.display='none'; $('btn-review').style.display = (window.__missed.length ? 'inline-block':'none');
       $('counter').textContent = q.id;
@@ -500,15 +587,16 @@
       }
       const openSet=getOpenSet(idx); if(openSet.has(i)) openSet.delete(i); else openSet.add(i); render();
     }
-    function revealCorrect(){ const q=window.QUESTIONS[idx]; const ci=q.correctIndex; if(typeof ci!=='number'||ci<0) return; const openSet=getOpenSet(idx); openSet.add(ci); render(); $('btn-next-after').style.display='inline-block'; if(window.__missed.length) $('btn-review').display='inline-block'; }
+    function revealCorrect(){ const q=window.QUESTIONS[idx]; const ci=q.correctIndex; if(typeof ci!=='number'||ci<0) return; const openSet=getOpenSet(idx); openSet.add(ci); render(); $('btn-next-after').style.display='inline-block'; if(window.__missed.length) $('btn-review').style.display='inline-block'; }
     function revealAll(){ const q=window.QUESTIONS[idx]; const openSet=getOpenSet(idx); (q.options||[]).forEach((_,i)=> openSet.add(i)); render(); $('btn-next-after').style.display='inline-block'; if(window.__missed.length) $('btn-review').style.display='inline-block'; }
+
     function startReview(){ if(!window.__missed.length){ alert('No incorrect answers to review.'); return; } window.__reviewQueue = Array.from(new Set(window.__missed)); window.__reviewMode = true; window.__reviewPtr=0; idx=window.__reviewQueue[0]; render(); }
     function nextQ(){ stopTimer(); if(window.__reviewMode){ if(window.__reviewPtr < window.__reviewQueue.length-1){ window.__reviewPtr += 1; idx = window.__reviewQueue[window.__reviewPtr]; render(); return; } else window.__reviewMode=false; } if(idx < window.QUESTIONS.length-1){ idx += 1; render(); } }
     function prevQ(){ stopTimer(); if(window.__reviewMode){ if(window.__reviewPtr>0){ window.__reviewPtr -= 1; idx = window.__reviewQueue[window.__reviewPtr]; render(); return; } else window.__reviewMode=false; } if(idx>0){ idx -= 1; render(); } }
     function goTo(){ const n = parseInt($('goto').value,10); if(!isNaN(n)&&n>=1&&n<=window.QUESTIONS.length){ stopTimer(); idx=n-1; render(); } }
-    function strike(i){ const optDivs=$('options').querySelectorAll('.option'); const target=optDivs[i]?.children[1]; if(target) target.classList.toggle('struck'); }
+    function strike(i){ const optDivs=$('options').querySelectorAll('.option'); const target=optDivs[i]?.querySelector('.text'); if(target) target.classList.toggle('struck'); }
 
-    /* Restored: Random button handler (works in normal & review mode) */
+    /* Random */
     function randomQ(){
       stopTimer();
       const pool = window.__reviewMode ? window.__reviewQueue : window.QUESTIONS.map((_,i)=>i);
@@ -516,27 +604,207 @@
       const current = window.__reviewMode ? window.__reviewQueue[window.__reviewPtr] : idx;
       let next = current;
       if (pool.length === 1) next = pool[0];
-      else {
-        while (next === current) next = pool[Math.floor(Math.random()*pool.length)];
-      }
+      else { while (next === current) next = pool[Math.floor(Math.random()*pool.length)]; }
       if (window.__reviewMode){ window.__reviewPtr = pool.indexOf(next); }
       idx = next;
       render();
     }
 
+    /* ---------- Editor + mark dirty ---------- */
     function fillEditor(){ const q=window.QUESTIONS[idx]||{vignette:'',findings:[],options:[],rationales:[],correctIndex:-1};
       $('ed_vignette').value=q.vignette||''; $('ed_findings').value=(q.findings||[]).join('\n');
       $('ed_options').value=(q.options||[]).join('\n'); $('ed_rationales').value=(q.rationales||[]).join('\n');
       $('ed_correct').value=(typeof q.correctIndex==='number'? q.correctIndex : -1);
     }
     function toggleEditor(){ if(!window.__adminUnlocked){ alert('Admin tools are locked. Click the PASS logo and enter the password.'); return; } const ed=$('editor'); ed.style.display=(ed.style.display==='block'?'none':'block'); if(ed.style.display==='block') fillEditor(); }
-    function applyEdits(){ if(!window.__adminUnlocked){ alert('Admin tools are locked.'); return; } const q=window.QUESTIONS[idx]; if(!q) return; const before=JSON.parse(JSON.stringify(q));
+
+    function applyEdits(){ if(!window.__adminUnlocked){ alert('Admin tools are locked.'); return; }
+      const q=window.QUESTIONS[idx]; if(!q) return; const before=JSON.parse(JSON.stringify(q));
       q.vignette=$('ed_vignette').value.trim(); q.findings=$('ed_findings').value.split(/\n/).map(s=>s.trim()).filter(Boolean);
       q.options=$('ed_options').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,5);
       q.rationales=$('ed_rationales').value.split(/\n/).map(s=>s.trim()).filter(Boolean).slice(0,5);
       const ci=parseInt($('ed_correct').value,10); q.correctIndex=isNaN(ci)? -1 : ci;
-      window.CHANGE_LOG.push({time:new Date().toISOString(), id:q.id, before, after: JSON.parse(JSON.stringify(q))}); render();
+      q.__dirty = true;
+      window.CHANGE_LOG.push({time:new Date().toISOString(), id:q.id, before, after: JSON.parse(JSON.stringify(q))});
+      render();
+      toast('Edits applied locally. Use “Save edits to source files” to commit them.');
     }
+
+    function cleanForSave(q){
+      return {
+        id:q.id, category:q.category||'', diagnosis:q.diagnosis||'',
+        vignette:q.vignette||'', findings:Array.isArray(q.findings)?q.findings:[],
+        options:Array.isArray(q.options)?q.options:[],
+        rationales:Array.isArray(q.rationales)?q.rationales:[],
+        correctIndex: (typeof q.correctIndex==='number'? q.correctIndex : -1)
+      };
+    }
+
+    /* ---------- Save edits back to their original source JSON files ---------- */
+
+    function openGHSourceSave(){
+      if(!window.__adminUnlocked){ alert('Admin tools are locked.'); return; }
+      const info = detectRepoFromPageURL() || {owner:'', repo:''};
+      $('gh-owner').value = info.owner || '';
+      $('gh-repo').value = info.repo || '';
+      $('gh-message').value = 'Update questions via PASS editor';
+      $('gh-token').value = '';
+      $('gh-msg').textContent = '';
+
+      const dirty = window.QUESTIONS.filter(q=>q.__dirty && q.__src && q.__src.type==='github' && /\.json$/i.test(q.__src.path));
+      const byFile = groupBy(dirty, q => fileKeyFromMeta(q.__src)||'unknown');
+      const lines = [];
+      for (const [key, arr] of Object.entries(byFile)){
+        if (key==='unknown') continue;
+        const meta = keyToMeta(key);
+        lines.push(`• ${meta.path} @ ${meta.branch} — ${arr.length} change(s)`);
+      }
+      $('gh-summary').textContent = lines.length ? ('Files to update:\n' + lines.join('\n')) : 'No JSON-file edits pending.';
+      showModal('gh-modal', true);
+    }
+
+    function closeGH(){ showModal('gh-modal', false); }
+
+    function groupBy(list, fn){
+      const m = new Map();
+      for (const x of list){ const k = fn(x); if(!m.has(k)) m.set(k, []); m.get(k).push(x); }
+      return Object.fromEntries(m.entries());
+    }
+
+    function keyToMeta(key){
+      // owner/repo@branch:path
+      const [left, path] = key.split(':');
+      const [proj, branch] = left.split('@');
+      const [owner, repo] = proj.split('/');
+      return {type:'github', owner, repo, branch, path, fileKey:key};
+    }
+
+    async function saveDirtyBackToSources(){
+      const owner = $('gh-owner').value.trim();
+      const repo = $('gh-repo').value.trim();
+      const token = $('gh-token').value.trim();
+      const message = $('gh-message').value.trim() || 'Update questions via PASS editor';
+      const headers = {'Accept':'application/vnd.github+json','Authorization':'Bearer '+token};
+
+      if (!owner || !repo || !token){ $('gh-msg').style.color='#b91c1c'; $('gh-msg').textContent='Owner, repo, and token are required.'; return; }
+
+      const dirty = window.QUESTIONS.filter(q=>q.__dirty && q.__src && q.__src.type==='github');
+      const groups = groupBy(dirty, q => fileKeyFromMeta(q.__src)||'unknown');
+      const keys = Object.keys(groups).filter(k=>k!=='unknown');
+
+      if (!keys.length){ $('gh-msg').style.color='#065f46'; $('gh-msg').textContent='Nothing to save.'; return; }
+
+      $('gh-msg').style.color='#6b7280'; $('gh-msg').textContent='Saving...';
+
+      let ok=0, fail=0, skipped=0, notes=[];
+
+      for (const key of keys){
+        const meta = keyToMeta(key);
+        if (!/\.json$/i.test(meta.path)){ skipped++; notes.push(`Skipped non-JSON: ${meta.path}`); continue; }
+
+        // if page’s owner/repo differ from source, prefer source metadata
+        const effOwner = meta.owner || owner;
+        const effRepo  = meta.repo  || repo;
+
+        try{
+          // Get current file to read sha + content
+          const getUrl = `https://api.github.com/repos/${effOwner}/${effRepo}/contents/${encodeURIComponent(meta.path)}?ref=${encodeURIComponent(meta.branch)}`;
+          const r1 = await fetch(getUrl, {headers});
+          if (!r1.ok){ throw new Error(`GET ${meta.path} failed: ${r1.status}`); }
+          const info = await r1.json();
+          const text = atob(info.content.replace(/\n/g,''));
+          const parsed = parseJsonOrJsArray(text);
+          if (!parsed || !Array.isArray(parsed.arr)){ throw new Error('File is not JSON array nor {questions:[...]}.'); }
+
+          // Build new array by replacing items whose id matches dirty ones
+          const dirtyInThis = groups[key];
+          const dirtyById = new Map(dirtyInThis.map(q=>[q.id, cleanForSave(q)]));
+          let baseArr = parsed.arr.map(obj=>{
+            const id = String(obj.id ?? obj.qid ?? '').trim() || null;
+            return id && dirtyById.has(id) ? dirtyById.get(id) : obj;
+          });
+
+          // Also append any edited items whose id was not found in file (rare)
+          for (const q of dirtyInThis){
+            if (!baseArr.some(x=>String(x.id||'')===q.id)){
+              baseArr.push(cleanForSave(q));
+            }
+          }
+
+          // Keep original shape
+          let outObj = (parsed.shape==='object-questions') ? {questions: baseArr} : baseArr;
+          const body = {
+            message,
+            branch: meta.branch,
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(outObj, null, 2)))),
+            sha: info.sha
+          };
+          const putUrl = `https://api.github.com/repos/${effOwner}/${effRepo}/contents/${encodeURIComponent(meta.path)}`;
+          const r2 = await fetch(putUrl, {method:'PUT', headers, body:JSON.stringify(body)});
+          if (!r2.ok){ const t=await r2.text(); throw new Error(t||('PUT failed '+r2.status)); }
+
+          // Clear dirty flags for those questions
+          for (const q of dirtyInThis){ q.__dirty = false; }
+          ok++;
+        }catch(e){
+          fail++; notes.push(`${meta.path}: ${e.message}`);
+        }
+      }
+
+      const msg = `Saved: ${ok}, Failed: ${fail}, Skipped: ${skipped}` + (notes.length?`\n• ${notes.join('\n• ')}`:'');
+      $('gh-msg').style.whiteSpace='pre-wrap';
+      $('gh-msg').style.color = fail ? '#b91c1c' : '#065f46';
+      $('gh-msg').textContent = msg;
+      toast(msg);
+    }
+
+    /* ---------- Comments ---------- */
+    function openComment(){ $('cmt_email').value=''; $('cmt_subject').value=''; $('cmt_body').value=''; showModal('comment-modal', true); }
+    function closeComment(){ showModal('comment-modal', false); }
+    function collectMeta(){ const q=window.QUESTIONS[idx]||{}; return { id:q.id||'', selection: window.__answered[idx], time: (window.__timeSpent[idx]||0), ua:navigator.userAgent }; }
+    function copyComment(){ const meta=collectMeta(); const msg=`[Question ${meta.id}]
+Selection: ${meta.selection}
+Time(ms): ${meta.time}
+UA: ${meta.ua}
+
+` + $('cmt_body').value;
+      navigator.clipboard.writeText(msg).then(()=>{ /* ok */ });
+    }
+    function saveCommentCSV(){ const meta=collectMeta(); const rows=[['id','selection','time_ms','ua','email','subject','comment'],[meta.id,meta.selection,meta.time,meta.ua, $('cmt_email').value, $('cmt_subject').value, $('cmt_body').value.replace(/\n/g,' ')]];
+      const csv=rows.map(r=>r.map(x=>`"${String(x??'').replace(/"/g,'""')}"`).join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='PASS_Comments.csv'; a.click(); }
+    function sendComment(){ const meta=collectMeta(); const subject=encodeURIComponent('PASS OMM feedback: '+($('cmt_subject').value||meta.id)); 
+      const body=encodeURIComponent(`[Question ${meta.id}]
+Selection: ${meta.selection}
+Time(ms): ${meta.time}
+UA: ${meta.ua}
+
+` + $('cmt_body').value);
+      window.location.href = `mailto:OMMtutor@passprogram.net?subject=${subject}&body=${body}`; }
+
+    /* ---------- Keys ---------- */
+    document.addEventListener('keydown', function(e){
+      if (e.key==='ArrowRight'){ e.preventDefault(); nextQ(); }
+      else if (e.key==='ArrowLeft'){ e.preventDefault(); prevQ(); }
+      else if (e.key.toLowerCase()==='r'){ e.preventDefault(); randomQ(); }
+    });
+
+    /* ---------- Init ---------- */
+    window.addEventListener('DOMContentLoaded', async ()=>{
+      bindLogoTriggers();
+      resolveLogo();
+
+      $('admin-unlock').addEventListener('click', adminUnlock);
+      $('admin-cancel').addEventListener('click', closeAdminLogin);
+      $('backdrop').addEventListener('click', ()=>{ closeAdminLogin(); hideLog(); closeComment(); closeGH(); });
+
+      await autoLoadAll();
+
+      if(window.QUESTIONS.length){ render(); }
+      else { updateTopbar(); }
+    });
+
+    /* ---------- Change log / embed ---------- */
     function showLog(){ if(!window.__adminUnlocked){ alert('Admin tools are locked.'); return; }
       const body=$('logBody'); if(!(window.CHANGE_LOG||[]).length) body.innerHTML='<div class="muted">No changes yet.</div>';
       else body.innerHTML=(window.CHANGE_LOG||[]).map(ch=>`
@@ -556,10 +824,9 @@
       showModal('logModal', true);
     }
     function hideLog(){ showModal('logModal', false); }
-    function downloadLog(){ const blob = new Blob([JSON.stringify(window.CHANGE_LOG, null, 2)], {type:'application/json'});
-      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='PASS_ChangeLog.json'; a.click(); }
+
     function saveHTML(){ if (!window.__adminUnlocked){ alert('Admin tools are locked.'); return; }
-      const data = JSON.stringify(window.QUESTIONS, null, 2);
+      const data = JSON.stringify(window.QUESTIONS.map(cleanForSave), null, 2);
       const doc = document.documentElement.cloneNode(true);
       const emb = doc.querySelector('#embedded-questions');
       if (emb) emb.textContent = data; else { const s = doc.createElement('script'); s.id='embedded-questions'; s.type='application/json'; s.textContent=data; doc.body.appendChild(s); }
@@ -567,48 +834,6 @@
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], {type:'text/html'}));
       const ts = new Date().toISOString().replace(/[:.]/g,'-'); a.download = 'PASS_COMLEX_OMM_QBank_'+ts+'.html'; a.click();
     }
-    function openComment(){ $('cmt_email').value=''; $('cmt_subject').value=''; $('cmt_body').value=''; $('cmt_msg').textContent=''; showModal('comment-modal', true); }
-    function closeComment(){ showModal('comment-modal', false); }
-    function collectMeta(){ const q=window.QUESTIONS[idx]||{}; return { id:q.id||'', selection: window.__answered[idx], time: (window.__timeSpent[idx]||0), ua:navigator.userAgent }; }
-    function copyComment(){ const meta=collectMeta(); const msg=`[Question ${meta.id}]
-Selection: ${meta.selection}
-Time(ms): ${meta.time}
-UA: ${meta.ua}
-
-` + $('cmt_body').value;
-      navigator.clipboard.writeText(msg).then(()=>{ $('cmt_msg').textContent='Copied to clipboard.'; });
-    }
-    function saveCommentCSV(){ const meta=collectMeta(); const rows=[['id','selection','time_ms','ua','email','subject','comment'],[meta.id,meta.selection,meta.time,meta.ua, $('cmt_email').value, $('cmt_subject').value, $('cmt_body').value.replace(/\n/g,' ')]];
-      const csv=rows.map(r=>r.map(x=>`"${String(x??'').replace(/"/g,'""')}"`).join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv'});
-      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='PASS_Comments.csv'; a.click(); }
-    function sendComment(){ const meta=collectMeta(); const subject=encodeURIComponent('PASS OMM feedback: '+($('cmt_subject').value||meta.id)); 
-      const body=encodeURIComponent(`[Question ${meta.id}]
-Selection: ${meta.selection}
-Time(ms): ${meta.time}
-UA: ${meta.ua}
-
-` + $('cmt_body').value);
-      window.location.href = `mailto:OMMtutor@passprogram.net?subject=${subject}&body=${body}`; $('cmt_msg').textContent='Email draft opened in your client (mailto).'; }
-
-    document.addEventListener('keydown', function(e){
-      if (e.key==='ArrowRight'){ e.preventDefault(); nextQ(); }
-      else if (e.key==='ArrowLeft'){ e.preventDefault(); prevQ(); }
-      else if (e.key.toLowerCase()==='r'){ e.preventDefault(); randomQ(); }
-    });
-
-    window.addEventListener('DOMContentLoaded', async ()=>{
-      bindLogoTriggers();
-      resolveLogo();
-
-      $('admin-unlock').addEventListener('click', adminUnlock);
-      $('admin-cancel').addEventListener('click', closeAdminLogin);
-      $('backdrop').addEventListener('click', ()=>{ closeAdminLogin(); hideLog(); closeComment(); });
-
-      await autoLoadAll();
-
-      if(window.QUESTIONS.length){ render(); }
-      else { updateTopbar(); }
-    });
   </script>
 </body>
 </html>
