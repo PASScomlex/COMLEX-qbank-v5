@@ -435,7 +435,8 @@
     "vignette": "A 36-year-old man presents with sacroiliac pain. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Spring test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -3274,7 +3275,8 @@
     "findings": [
       "Spring test is positive",
       "Lumbar lordosis is decreased",
-      "Sphinx test is positive"
+      "Sphinx test is positive",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -3507,7 +3509,8 @@
       "Sphinx test is negative",
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior"
+      "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -3545,7 +3548,8 @@
     "findings": [
       "Spring test is negative",
       "Sphinx test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -3780,7 +3784,8 @@
       "Spring test is negative",
       "Sphinx test is negative",
       "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -5319,7 +5324,8 @@
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
       "Spring test is positive",
-      "Left sacral sulcus is shallow/posterior; Right sacral sulcus is shallow/posterior"
+      "Left sacral sulcus is shallow/posterior; Right sacral sulcus is shallow/posterior",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -5399,7 +5405,8 @@
       "Lumbar lordosis is increased",
       "Spring test is negative",
       "Sphinx test is negative",
-      "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior"
+      "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -5514,7 +5521,8 @@
     "vignette": "A 45-year-old woman presents with pain that worsens with prolonged sitting. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Lumbar lordosis is decreased",
-      "Sphinx test is positive"
+      "Sphinx test is positive",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -7515,7 +7523,8 @@
     "findings": [
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Sphinx test is negative"
+      "Sphinx test is negative",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -9334,7 +9343,8 @@
     "findings": [
       "Spring test is positive",
       "Lumbar lordosis is decreased",
-      "Sphinx test is positive"
+      "Sphinx test is positive",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -9652,7 +9662,8 @@
     "findings": [
       "Spring test is positive",
       "Left sacral sulcus is shallow/posterior; Right sacral sulcus is shallow/posterior",
-      "Lumbar lordosis is decreased"
+      "Lumbar lordosis is decreased",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -9922,7 +9933,8 @@
     "findings": [
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Sphinx test is negative"
+      "Sphinx test is negative",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -11025,7 +11037,8 @@
     "findings": [
       "Spring test is positive",
       "Sphinx test is positive",
-      "Lumbar lordosis is decreased"
+      "Lumbar lordosis is decreased",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -12714,7 +12727,8 @@
     "findings": [
       "Sphinx test is negative",
       "Spring test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -14575,7 +14589,8 @@
     "findings": [
       "Sphinx test is negative",
       "Spring test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -16427,7 +16442,8 @@
     "vignette": "A 21-year-old woman presents with stiffness after physical activity. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Spring test is positive",
-      "Lumbar lordosis is decreased"
+      "Lumbar lordosis is decreased",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -16506,7 +16522,8 @@
       "Spring test is negative",
       "Sphinx test is negative",
       "Lumbar lordosis is increased",
-      "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior"
+      "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -17848,7 +17865,8 @@
       "Sphinx test is negative",
       "Spring test is negative",
       "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -19962,7 +19980,8 @@
     "findings": [
       "Sphinx test is negative",
       "Spring test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -20829,7 +20848,8 @@
     "findings": [
       "Sphinx test is positive",
       "Spring test is positive",
-      "Lumbar lordosis is decreased"
+      "Lumbar lordosis is decreased",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -21971,7 +21991,8 @@
     "findings": [
       "Sphinx test is positive",
       "Lumbar lordosis is decreased",
-      "Spring test is positive"
+      "Spring test is positive",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -24613,7 +24634,8 @@
     "vignette": "A 65-year-old man presents with low back stiffness. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Spring test is positive",
-      "Lumbar lordosis is decreased"
+      "Lumbar lordosis is decreased",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -26970,7 +26992,8 @@
       "Lumbar lordosis is decreased",
       "Sphinx test is positive",
       "Spring test is positive",
-      "Left sacral sulcus is shallow/posterior; Right sacral sulcus is shallow/posterior"
+      "Left sacral sulcus is shallow/posterior; Right sacral sulcus is shallow/posterior",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -33956,7 +33979,8 @@
     "vignette": "A 66-year-old woman presents with pelvic discomfort. Osteopathic structural examination reveals the following findings.",
     "findings": [
       "Lumbar lordosis is decreased",
-      "Spring test is positive"
+      "Spring test is positive",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -33994,7 +34018,8 @@
     "findings": [
       "Lumbar lordosis is increased",
       "Sphinx test is negative",
-      "Spring test is negative"
+      "Spring test is negative",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -34152,7 +34177,8 @@
     "findings": [
       "Spring test is negative",
       "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -34976,7 +35002,8 @@
     "findings": [
       "Spring test is negative",
       "Sphinx test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -36794,7 +36821,8 @@
       "Spring test is negative",
       "Left sacral sulcus is deep/anterior; Right sacral sulcus is deep/anterior",
       "Sphinx test is negative",
-      "Lumbar lordosis is increased"
+      "Lumbar lordosis is increased",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -37504,7 +37532,8 @@
     "findings": [
       "Left sacral sulcus is shallow/posterior; Right sacral sulcus is shallow/posterior",
       "Lumbar lordosis is decreased",
-      "Sphinx test is positive"
+      "Sphinx test is positive",
+      "Both sacral sulci are shallow/posterior"
     ],
     "options": [
       {
@@ -37581,7 +37610,8 @@
     "findings": [
       "Lumbar lordosis is increased",
       "Sphinx test is negative",
-      "Spring test is negative"
+      "Spring test is negative",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
@@ -38288,7 +38318,8 @@
     "findings": [
       "Lumbar lordosis is increased",
       "Spring test is negative",
-      "Sphinx test is negative"
+      "Sphinx test is negative",
+      "Both sacral sulci are deep/anterior"
     ],
     "options": [
       {
